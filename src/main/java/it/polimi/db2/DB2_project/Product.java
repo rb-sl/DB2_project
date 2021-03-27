@@ -2,6 +2,7 @@ package it.polimi.db2.DB2_project;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.util.List;
 
 @Table(name = "product")
 @Entity
@@ -10,6 +11,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_id", nullable = false)
     private Integer prod_id;
+
+    @OneToMany(mappedBy = "product")
+    private List<Questionnaire> questionnaires;
 
     public Integer getProd_id() {
         return prod_id;
@@ -34,6 +38,14 @@ public class Product {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    public List<Questionnaire> getQuestionnaires() {
+        return questionnaires;
+    }
+
+    public void setQuestionnaires(List<Questionnaire> questionnaires) {
+        this.questionnaires = questionnaires;
+    }
 
     public Blob getImage() {
         return image;

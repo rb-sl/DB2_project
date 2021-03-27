@@ -1,6 +1,8 @@
 package it.polimi.db2.DB2_project;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Map;
 
 @Table(name = "question")
 @Entity
@@ -12,6 +14,24 @@ public class Question {
 
     @Column(name = "text", nullable = false, length = 65536)
     private String text;
+
+    @ManyToMany(mappedBy = "questions")
+    private List<Questionnaire> questionnaires;
+
+    @ElementCollection
+    @CollectionTable (name = "answer",
+            joinColumns = @JoinColumn (name = "question_fk"))
+    @MapKeyJoinColumn (name = "access_fk")
+    @Column(name = "text")
+    private Map<Access, String> answers;
+
+    public List<Questionnaire> getQuestionnaires() {
+        return questionnaires;
+    }
+
+    public void setQuestionnaires(List<Questionnaire> questionnaires) {
+        this.questionnaires = questionnaires;
+    }
 
     public String getText() {
         return text;

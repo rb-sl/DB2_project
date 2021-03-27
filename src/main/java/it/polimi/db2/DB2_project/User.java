@@ -1,6 +1,7 @@
 package it.polimi.db2.DB2_project;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "user")
 @Entity
@@ -25,6 +26,16 @@ public class User {
     @Column(name = "points", nullable = false)
     private Integer points;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Access> access;
+
+    public List<Access> getAccess() {
+        return access;
+    }
+
+    public void setAccess(List<Access> access) {
+        this.access = access;
+    }
 
     public Integer getPoints() {
         return points;

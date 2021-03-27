@@ -2,10 +2,26 @@ package it.polimi.db2.DB2_project;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Table(name = "access")
 @Entity
 public class Access {
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_fk", nullable = false)
+    private User user;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "quest_fk", nullable = false)
+    private Questionnaire questionnaire;
+
+    @ElementCollection
+    @CollectionTable (name = "answer",
+            joinColumns = @JoinColumn (name = "access_fk"))
+            @MapKeyJoinColumn (name = "question_fk")
+            @Column(name = "text")
+    private Map<Question, String> answers;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +41,22 @@ public class Access {
     @Enumerated(EnumType.STRING)
     @Column(name = "expertise")
     private Expertise expertise;
+
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public LocalDateTime getAccessTime() {
         return accessTime;
