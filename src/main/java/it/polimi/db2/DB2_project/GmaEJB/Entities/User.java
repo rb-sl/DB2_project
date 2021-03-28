@@ -1,9 +1,12 @@
-package it.polimi.db2.DB2_project;
+package it.polimi.db2.DB2_project.GmaEJB.Entities;
+
 
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "user")
+@NamedQuery(name = "User.login",
+        query = "SELECT u FROM User u WHERE u.username=?1 AND u.password=?2")
 @Entity
 public class User {
     @Id

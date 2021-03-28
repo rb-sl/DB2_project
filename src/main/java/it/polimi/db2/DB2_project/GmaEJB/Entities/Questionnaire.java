@@ -1,4 +1,4 @@
-package it.polimi.db2.DB2_project;
+package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
