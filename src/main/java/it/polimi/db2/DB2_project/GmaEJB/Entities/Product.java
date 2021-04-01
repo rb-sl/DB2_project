@@ -2,10 +2,16 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 
 @Table(name = "product")
 @Entity
+@NamedQuery(name = "Product.findProductByDate",
+        query = "SELECT p FROM Questionnaire q " +
+                "JOIN Product p ON q.product.prod_id=p.prod_id " +
+                "WHERE q.date=?1")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +40,7 @@ public class Product {
 
     @Lob
     @Column(name = "image", nullable = false)
-    private Blob image;
+    private byte[] image;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -47,11 +53,11 @@ public class Product {
         this.questionnaires = questionnaires;
     }
 
-    public Blob getImage() {
-        return image;
+    public String getImage()  {
+        return Base64.getMimeEncoder().encodeToString(image);
     }
 
-    public void setImage(Blob image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

@@ -7,6 +7,8 @@ import java.util.List;
 @Table(name = "user")
 @NamedQuery(name = "User.login",
         query = "SELECT u FROM User u WHERE u.username=?1 AND u.password=?2")
+@NamedQuery(name = "User.findByName",
+        query = "SELECT u FROM User u WHERE u.username=?1")
 @Entity
 public class User {
     @Id
