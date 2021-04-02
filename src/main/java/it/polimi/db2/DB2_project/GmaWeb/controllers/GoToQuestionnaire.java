@@ -1,8 +1,8 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Questionnaire;
 import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -15,10 +15,10 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 
-@WebServlet(name = "GoToHomePage", value = "/GoToHomePage")
-public class GoToHomePage extends HttpServlet {
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/ProductBean")
-    private ProductBean productBean;
+@WebServlet(name = "GoToQuestionnaire", value = "/GoToQuestionnaire")
+public class GoToQuestionnaire extends HttpServlet {
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
+    private QuestionnaireBean questionnaireBean;
 
     private TemplateEngine templateEngine;
 
@@ -31,21 +31,22 @@ public class GoToHomePage extends HttpServlet {
         templateResolver.setSuffix(".html");
     }
 
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         String loginpath = getServletContext().getContextPath() + "/Login";
+        HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
             return;
         }
-        String path = "/home.html";
+        String path = "/questionnaire.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-        Product product = productBean.findProductByDate(LocalDate.now());
 
-        ctx.setVariable("product", product);
+        ctx.setVariable("questions", questionnaire.getQuestions());
         templateEngine.process(path, ctx, response.getWriter());
     }
 

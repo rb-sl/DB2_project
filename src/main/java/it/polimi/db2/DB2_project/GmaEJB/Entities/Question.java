@@ -1,6 +1,7 @@
 package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class Question {
             joinColumns = @JoinColumn (name = "question_fk"))
     @MapKeyJoinColumn (name = "access_fk")
     @Column(name = "text")
-    private Map<Access, String> answers;
+    private Map<Access, String> answers = new HashMap<>();
 
     public List<Questionnaire> getQuestionnaires() {
         return questionnaires;
@@ -47,6 +48,10 @@ public class Question {
 
     public void setQuestion_id(Integer question_id) {
         this.question_id = question_id;
+    }
+
+    public Map<Access, String> getAnswers() {
+        return answers;
     }
 
     @Override

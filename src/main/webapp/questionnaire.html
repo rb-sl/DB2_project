@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Questionnaire of the day</title>
 </head>
 <body>
     <h1>Questionnaire of the day</h1>
+
+    <form action="CompileQuestionnaire" method="POST">
+        <div id="closedquestions">
+            Age: <input type="number" name="age"><br>
+            Sex:
+                <label><input type="radio" name="sex" value="U" checked></label>
+                <label><input type="radio" name="sex" value="M">M</label>
+                <label><input type="radio" name="sex" value="F">F</label>
+            <br>
+            Expertise level:
+            <select name="expertise" default = "U">
+                <option disabled selected></option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <div id="openquestions" th:each="question: ${questions}">
+            <p th:text="${question.text}"></p>
+            <textarea th:name="res+${question.question_id}"></textarea>
+        </div>
+        <input type="submit" value="submit">
+    </form>
 </body>
 </html>

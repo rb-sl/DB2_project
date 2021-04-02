@@ -2,6 +2,7 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Table(name = "access")
@@ -21,7 +22,7 @@ public class Access {
             joinColumns = @JoinColumn (name = "access_fk"))
             @MapKeyJoinColumn (name = "question_fk")
             @Column(name = "text")
-    private Map<Question, String> answers;
+    private Map<Question, String> answers = new HashMap<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,7 +91,9 @@ public class Access {
         this.age = age;
     }
 
-
+    public void addAnswer(Question q, String answer){
+        this.answers.put(q, answer);
+    }
 
     public Integer getId() {
         return id;

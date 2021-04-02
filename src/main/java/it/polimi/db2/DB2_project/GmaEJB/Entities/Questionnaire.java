@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Table(name = "questionnaire")
+@NamedQuery(name = "Questionnaire.findQuestionnaireByDate",
+        query = "SELECT q FROM Questionnaire q " +
+                "WHERE q.date=?1")
 @Entity
 public class Questionnaire {
     @Id
@@ -18,10 +21,10 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.REMOVE)
     private List<Access> accesses;
 
-    @JoinTable(name = "Form",
+    @JoinTable(name = "form",
             joinColumns = @JoinColumn(name = "quest_fk"),
             inverseJoinColumns = @JoinColumn(name = "question_fk"))
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Question> questions;
 
     @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
