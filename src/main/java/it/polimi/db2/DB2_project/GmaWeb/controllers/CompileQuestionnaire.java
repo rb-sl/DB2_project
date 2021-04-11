@@ -4,6 +4,7 @@ import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class CompileQuestionnaire extends HttpServlet {
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -50,19 +53,33 @@ public class CompileQuestionnaire extends HttpServlet {
         }
         User u = (User)request.getSession().getAttribute("user");
 
-            Short age = Short.parseShort(request.getParameter("age"));
-            if(age <= 0 || age > 99){
-                //todo ERROREEE
-            }
-            Sex sex = Sex.valueOf(request.getParameter("sex"));
-            Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
-            Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
-            List<Question> questionIds = questionnaire.getQuestions();
+        Access access = accessBean.findAccess(LocalDate.now(), u);
+        if(access != null) {
+            // todo already done
+        }
+
+        Short age = Short.parseShort(request.getParameter("age"));
+        Sex sex = Sex.valueOf(request.getParameter("sex"));
+        Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
+
+        if(age <= 0 || age > 99) {
+            // todo if resilience: answer with user's input
+            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
+            response.sendRedirect(path);
+            return;
+        }
+
+        Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
+        List<Question> questionIds = questionnaire.getQuestions();
+
         for (Question q:
                 questionIds) {
-            answ.put(q.getQuestion_id(), request.getParameter("res"+q.getQuestion_id()));
+            answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
             //System.out.println(answ.get(q.getQuestion_id()));
         }
         accessBean.createAccess(u, sex, age, ex, answ);
+
+        String path = getServletContext().getContextPath() + "/GoToHomePage";
+        response.sendRedirect(path);
     }
 }

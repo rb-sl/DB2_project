@@ -31,7 +31,6 @@ public class GoToQuestionnaire extends HttpServlet {
         templateResolver.setSuffix(".html");
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
@@ -44,7 +43,6 @@ public class GoToQuestionnaire extends HttpServlet {
         String path = "/questionnaire.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
 
         ctx.setVariable("questions", questionnaire.getQuestions());
         templateEngine.process(path, ctx, response.getWriter());

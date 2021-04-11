@@ -1,12 +1,15 @@
 package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Table(name = "access")
 @Entity
+@NamedQuery(name = "Access.findByUser",
+        query = "select a from Access a where a.user = ?1")
 public class Access {
 
     @ManyToOne(optional = false)
@@ -31,6 +34,7 @@ public class Access {
 
     @Column(name = "accessTime")
     private LocalDateTime accessTime;
+    private LocalDate accessDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sex")

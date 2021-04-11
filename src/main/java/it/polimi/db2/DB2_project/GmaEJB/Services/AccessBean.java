@@ -5,10 +5,13 @@ import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 public class AccessBean {
@@ -17,6 +20,7 @@ public class AccessBean {
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
     private Access access;
+
     public void createAccess(User u, Sex sex, Short age, Expertise ex, Map<Integer, String> answ){
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         access = new Access();
@@ -26,10 +30,21 @@ public class AccessBean {
         access.setExpertise(ex);
         access.setUser(u);
         access.setQuestionnaire(questionnaire);
-        answ.forEach((key, text) ->access.addAnswer(em.find(Question.class, key), text));
+        if(answ != null) {
+            answ.forEach((key, text) -> access.addAnswer(em.find(Question.class, key), text));
+        }
         em.persist(access);
     }
+
     public Access retrieveAccess(){
         return em.find(Access.class, 1);
+    }
+
+    public Access findAccess(LocalDate date, User user) {
+        return em.createNamedQuery("Access.findByUser", Access.class)
+                .setParameter(1, user)
+                .getResultList().stream().filter(x -> x.getAccessTime().toLocalDate().equals(date))
+                .collect(Collectors.toList())
+                .get(0);
     }
 }
