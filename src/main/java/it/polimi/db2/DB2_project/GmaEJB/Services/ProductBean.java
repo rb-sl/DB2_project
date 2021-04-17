@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
+import java.util.List;
 
 @Stateless
 public class ProductBean {
@@ -14,9 +15,12 @@ public class ProductBean {
 
     // Function that returns the product of a given day
     public Product findProductByDate(LocalDate date) {
-        return em.createNamedQuery("Product.findProductByDate", Product.class)
-                .setParameter(1, date)
-                .getResultList()
-                .get(0);
+        List<Product> products = em.createNamedQuery("Product.findProductByDate", Product.class)
+                                .setParameter(1, date)
+                                .getResultList();
+        if (products == null || products.isEmpty()) {
+            return null;
+        }
+        return products.get(0);
     }
 }

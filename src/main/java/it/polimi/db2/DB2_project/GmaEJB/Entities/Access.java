@@ -9,7 +9,7 @@ import java.util.Map;
 @Table(name = "access")
 @Entity
 @NamedQuery(name = "Access.findByUser",
-        query = "select a from Access a where a.user = ?1")
+        query = "select a from Access a where a.user = ?1 and a.accessDate = ?2")
 public class Access {
 
     @ManyToOne(optional = false)
@@ -34,6 +34,8 @@ public class Access {
 
     @Column(name = "accessTime")
     private LocalDateTime accessTime;
+
+    @Column(name = "accessDate")
     private LocalDate accessDate;
 
     @Enumerated(EnumType.STRING)
@@ -105,6 +107,14 @@ public class Access {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalDate getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(LocalDate accessDate) {
+        this.accessDate = accessDate;
     }
 
     @Override

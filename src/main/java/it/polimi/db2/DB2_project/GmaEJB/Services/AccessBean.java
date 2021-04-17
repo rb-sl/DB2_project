@@ -25,6 +25,7 @@ public class AccessBean {
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         access = new Access();
         access.setAccessTime(LocalDateTime.now());
+        access.setAccessDate(LocalDate.now());
         access.setAge(age);
         access.setSex(sex);
         access.setExpertise(ex);
@@ -41,10 +42,15 @@ public class AccessBean {
     }
 
     public Access findAccess(LocalDate date, User user) {
-        return em.createNamedQuery("Access.findByUser", Access.class)
+        List<Access> list = em.createNamedQuery("Access.findByUser", Access.class)
                 .setParameter(1, user)
-                .getResultList().stream().filter(x -> x.getAccessTime().toLocalDate().equals(date))
-                .collect(Collectors.toList())
-                .get(0);
+                .setParameter(2, date)
+                .getResultList();
+
+        if(list == null || list.isEmpty()) {
+            return null;
+        }
+
+        return list.get(0);
     }
 }

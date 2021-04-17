@@ -4,7 +4,6 @@ import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -14,13 +13,12 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "CompileQuestionnaire", value = "/CompileQuestionnaire")
-public class CompileQuestionnaire extends HttpServlet {
+@WebServlet(name = "DiscardQuestionnaire", value = "/DiscardQuestionnaire")
+public class DiscardQuestionnaire extends HttpServlet {
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
@@ -46,7 +44,6 @@ public class CompileQuestionnaire extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
-        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
@@ -54,32 +51,10 @@ public class CompileQuestionnaire extends HttpServlet {
         }
         User u = (User)request.getSession().getAttribute("user");
 
-        Access access = accessBean.findAccess(LocalDate.now(), u);
-        if(access != null) {
-            response.sendRedirect(homepath);
-            return;
-        }
-
-        Short age = Short.parseShort(request.getParameter("age"));
-        Sex sex = Sex.valueOf(request.getParameter("sex"));
-        Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
-
-        if(age <= 0 || age > 99) {
-            // todo if resilience: answer with user's input
-            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
-            response.sendRedirect(path);
-            return;
-        }
-
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         List<Question> questionIds = questionnaire.getQuestions();
 
-        for (Question q:
-                questionIds) {
-            answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
-            //System.out.println(answ.get(q.getQuestion_id()));
-        }
-        accessBean.createAccess(u, sex, age, ex, answ);
+        accessBean.createAccess(u, null, null, null, null);
 
         String path = getServletContext().getContextPath() + "/GoToHomePage";
         response.sendRedirect(path);
