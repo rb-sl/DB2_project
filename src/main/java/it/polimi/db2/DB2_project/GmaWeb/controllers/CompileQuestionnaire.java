@@ -47,6 +47,8 @@ public class CompileQuestionnaire extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+        Short age = 0;
+
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
@@ -60,28 +62,37 @@ public class CompileQuestionnaire extends HttpServlet {
             return;
         }
 
-        Short age = Short.parseShort(request.getParameter("age"));
+        String resultAge = request.getParameter("age");
+        if (resultAge != null && !resultAge.isEmpty()) {
+            age = Short.parseShort(resultAge);
+            if(age <= 0 || age > 99) {
+                // todo if resilience: answer with user's input
+                String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
+                response.sendRedirect(path);
+                return;
+            }
+        }
+
         Sex sex = Sex.valueOf(request.getParameter("sex"));
         Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
 
-        if(age <= 0 || age > 99) {
-            // todo if resilience: answer with user's input
-            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
-            response.sendRedirect(path);
-            return;
-        }
+
 
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         List<Question> questionIds = questionnaire.getQuestions();
 
-        for (Question q:
-                questionIds) {
+        for (Question q : questionIds) {
             answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
             //System.out.println(answ.get(q.getQuestion_id()));
         }
-        accessBean.createAccess(u, sex, age, ex, answ);
 
-        String path = getServletContext().getContextPath() + "/GoToHomePage";
-        response.sendRedirect(path);
+//        if(!accessBean.hasBadword(answ)) {
+            accessBean.createAccess(u, sex, age, ex, answ);
+//        }
+
+
+        String path = "/Submitted";
+        request.setAttribute("isSaved", 1);
+        getServletContext().getRequestDispatcher(path).forward(request, response);
     }
 }

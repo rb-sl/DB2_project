@@ -10,11 +10,11 @@
     <h2>Product of the day</h2>
 
     <div th:utext="${product} ? '<img src=\'' + *{'data:image/png;base64,' + product.getImage()} + '\' alt=\'Product of the day\'/>' : ''"></div>
-<!--    <img th:src="${product} ? *{'data:image/png;base64,' + product.getImage()} : ''" th:alt="${product} ? 'Product of the day' : ''"/>-->
 
     <h3 th:text="${product} ? *{product.getName()} : 'No product available for today\'s questionnaire'"></h3>
 
     <div th:utext="${canCompile && product} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
     <a href="leaderboards.html">Leaderboards</a>
+    <a href="Logout">Logout</a>
 </body>
 </html>

@@ -19,6 +19,8 @@ public class AccessBean {
     private EntityManager em;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/BadwordBean")
+    private BadwordBean badwordbean;
     private Access access;
 
     public void createAccess(User u, Sex sex, Short age, Expertise ex, Map<Integer, String> answ){
@@ -35,6 +37,22 @@ public class AccessBean {
             answ.forEach((key, text) -> access.addAnswer(em.find(Question.class, key), text));
         }
         em.persist(access);
+    }
+
+    public Boolean hasBadword(Map<Integer, String> answ) {
+        List<Badwords> badwords = badwordbean.getBadwords();
+
+        Boolean hasBadword = false;
+
+        if (badwords != null && !badwords.isEmpty()) {
+            for (Integer key : answ.keySet()) {
+                for (Badwords bad : badwords) {
+                    hasBadword = hasBadword || answ.get(key).contains(bad.getWord());
+                }
+            }
+        }
+
+        return hasBadword;
     }
 
     public Access retrieveAccess(){

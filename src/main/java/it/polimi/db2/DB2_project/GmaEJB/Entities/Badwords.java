@@ -2,6 +2,7 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 
+@NamedQuery(name="Badwords.findAll", query = "select b from Badwords b")
 @Table(name = "badwords")
 @Entity
 public class Badwords {
