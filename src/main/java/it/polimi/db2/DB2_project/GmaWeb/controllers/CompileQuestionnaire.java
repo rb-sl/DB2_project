@@ -86,10 +86,12 @@ public class CompileQuestionnaire extends HttpServlet {
             //System.out.println(answ.get(q.getQuestion_id()));
         }
 
-//        if(!accessBean.hasBadword(answ)) {
-            accessBean.createAccess(u, sex, age, ex, answ);
-//        }
-
+        if(accessBean.hasBadword(answ)) {
+            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
+            response.sendRedirect(path);
+            return;
+        }
+        accessBean.createAccess(u, sex, age, ex, answ);
 
         String path = "/Submitted";
         request.setAttribute("isSaved", 1);
