@@ -26,6 +26,8 @@ public class CompileQuestionnaire extends HttpServlet {
     private QuestionnaireBean questionnaireBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
     private AccessBean accessBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/UserBean")
+    private UserBean userBean;
 
     private TemplateEngine templateEngine;
     private Map<Integer, String> answ = new HashMap<Integer, String>();
@@ -58,7 +60,7 @@ public class CompileQuestionnaire extends HttpServlet {
         User u = (User)request.getSession().getAttribute("user");
 
         Access access = accessBean.findAccess(LocalDate.now(), u);
-        if(access != null) {
+        if(u.getBanned() || access != null) {
             response.sendRedirect(homepath);
             return;
         }
@@ -88,8 +90,10 @@ public class CompileQuestionnaire extends HttpServlet {
         }
 
         if(accessBean.hasBadword(answ)) {
-            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
-            response.sendRedirect(path);
+//            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
+//            response.sendRedirect(path);
+            response.sendRedirect(homepath);
+            userBean.banUser(u);
             return;
         }
         accessBean.createAccess(u, sex, age, ex, answ);

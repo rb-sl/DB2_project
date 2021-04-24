@@ -36,6 +36,21 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Access> access;
 
+    public Boolean getBanned() {
+        return isBanned;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public void setBanned(Boolean banned) {
+        isBanned = banned;
+    }
+
+    @Column(name = "isBanned", nullable = false)
+    private Boolean isBanned;
+
     public List<Access> getAccess() {
         return access;
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Leaderboards</title>
@@ -13,8 +13,11 @@
             <th>Name</th>
             <th>Points</th>
         </tr>
-
-<!--  Print stuff like <tr><td>1</td><td>Gregor</td><td>150000</td></tr>   -->
+        <tr th:each="user, i: ${leaderboard}">
+            <td th:text="${i.index}+1"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getPoints()}"></td>
+        </tr>
     </table>
 </body>
 </html>
