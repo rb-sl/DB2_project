@@ -1,6 +1,7 @@
 package it.polimi.db2.DB2_project.GmaEJB.Services;
 
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.UserLeaderboard;
 import it.polimi.db2.DB2_project.Hasher;
 
 import javax.ejb.Stateless;
@@ -9,7 +10,11 @@ import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Stateless
 public class UserBean {
@@ -55,5 +60,16 @@ public class UserBean {
         newUser.setIsAdmin(false);
 
         em.persist(newUser);
+    }
+
+    public void banUser(User u){
+        u.setBanned(true);
+        em.merge(u);
+    }
+
+    public List<UserLeaderboard> retrieveLeaderboard() {
+        return em.createNamedQuery("User.getLeaderboard", User.class).
+                getResultList().stream().map(u-> new UserLeaderboard(u.getUsername(), u.getPoints())).
+                collect(Collectors.toList());
     }
 }

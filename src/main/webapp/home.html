@@ -13,8 +13,10 @@
 
     <h3 th:text="${product} ? *{product.getName()} : 'No product available for today\'s questionnaire'"></h3>
 
-    <div th:utext="${canCompile && product} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
-    <a href="leaderboards.html">Leaderboards</a>
+    <h3 th:text="${isBanned} ? 'You have been banned and cannot compile any questionnaire' : ''" style="color:red"></h3>
+
+    <div th:utext="${canCompile && product && !isBanned} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
+    <a href="GoToLeaderboard">Leaderboards</a>
     <a href="Logout">Logout</a>
 </body>
 </html>

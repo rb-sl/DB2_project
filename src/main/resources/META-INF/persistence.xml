@@ -5,7 +5,7 @@
              version="2.2">
     <persistence-unit name="default">
         <jta-data-source>GMA@2.229.216.206</jta-data-source>
-        <class>it.polimi.db2.DB2_project.Prova</class>
+        <class>it.polimi.db2.DB2_project.Hasher</class>
         <properties>
             <property name="eclipselink.logging.level" value="FINE" />
         </properties>

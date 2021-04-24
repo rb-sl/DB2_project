@@ -3,6 +3,7 @@ package it.polimi.db2.DB2_project.GmaWeb.controllers;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;

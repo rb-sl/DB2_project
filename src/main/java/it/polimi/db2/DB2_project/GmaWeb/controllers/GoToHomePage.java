@@ -49,6 +49,8 @@ public class GoToHomePage extends HttpServlet {
         Access access = accessBean.findAccess(LocalDate.now(), u);
 
 
+
+
         String path = "/home.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -58,6 +60,8 @@ public class GoToHomePage extends HttpServlet {
         ctx.setVariable("product", product);
         // Variable to know if the user has already compiled or discarded a questionnaire
         ctx.setVariable("canCompile", access == null);
+
+        ctx.setVariable("isBanned", u.getBanned());
 
         templateEngine.process(path, ctx, response.getWriter());
     }

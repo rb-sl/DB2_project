@@ -1,9 +1,12 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
-import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Access;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.UserLeaderboard;
+import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -17,12 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "DiscardQuestionnaire", value = "/DiscardQuestionnaire")
-public class DiscardQuestionnaire extends HttpServlet {
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
-    private QuestionnaireBean questionnaireBean;
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
-    private AccessBean accessBean;
+@WebServlet(name = "GoToLeaderboard", value = "/GoToLeaderboard")
+public class GoToLeaderboard extends HttpServlet {
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/UserBean")
+    private UserBean userBean;
 
     private TemplateEngine templateEngine;
     private Map<Integer, String> answ = new HashMap<Integer, String>();
@@ -38,32 +39,32 @@ public class DiscardQuestionnaire extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
             return;
         }
         User u = (User)request.getSession().getAttribute("user");
-        Access access = accessBean.findAccess(LocalDate.now(), u);
-        if(access != null || u.getBanned()) {
-            response.sendRedirect(homepath);
-            return;
+
+        List<UserLeaderboard> leaderboard = userBean.retrieveLeaderboard();
+        for(UserLeaderboard ld: leaderboard) {
+            System.out.println(ld.getUsername() + " " + ld.getPoints());
         }
 
-        Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
-        List<Question> questionIds = questionnaire.getQuestions();
+        String path = "/leaderboard.html";
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-        accessBean.createAccess(u, null, null, null, null);
+        ctx.setVariable("leaderboard", leaderboard);
 
-        String path = "/Submitted";
-        request.setAttribute("isSaved", 0);
-        getServletContext().getRequestDispatcher(path).forward(request, response);
+        templateEngine.process(path, ctx, response.getWriter());
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     }
 }

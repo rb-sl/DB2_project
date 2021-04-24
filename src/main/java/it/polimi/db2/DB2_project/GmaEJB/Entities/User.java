@@ -9,6 +9,8 @@ import java.util.List;
         query = "SELECT u FROM User u WHERE u.username=?1 AND u.password=?2")
 @NamedQuery(name = "User.findByName",
         query = "SELECT u FROM User u WHERE u.username=?1")
+@NamedQuery(name = "User.getLeaderboard",
+        query = "SELECT u FROM User u ORDER BY u.points DESC")
 @Entity
 public class User {
     @Id
