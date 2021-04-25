@@ -3,6 +3,7 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +11,9 @@ import java.util.Map;
 @Entity
 @NamedQuery(name = "Access.findByUser",
         query = "select a from Access a where a.user = ?1 and a.accessDate = ?2")
+@NamedQuery(name = "Access.findByDate",
+        query = "select a from Access a where a.accessDate = ?1")
 public class Access {
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_fk", nullable = false)
     private User user;
@@ -33,7 +35,7 @@ public class Access {
     private Integer id;
 
     @Column(name = "accessTime")
-    private LocalDateTime accessTime;
+    private LocalTime accessTime;
 
     @Column(name = "accessDate")
     private LocalDate accessDate;
@@ -65,11 +67,11 @@ public class Access {
         this.user = user;
     }
 
-    public LocalDateTime getAccessTime() {
+    public LocalTime getAccessTime() {
         return accessTime;
     }
 
-    public void setAccessTime(LocalDateTime accessTime) {
+    public void setAccessTime(LocalTime accessTime) {
         this.accessTime = accessTime;
     }
 
@@ -99,6 +101,10 @@ public class Access {
 
     public void addAnswer(Question q, String answer){
         this.answers.put(q, answer);
+    }
+
+    public Map<Question, String> getAnswers() {
+        return answers;
     }
 
     public Integer getId() {

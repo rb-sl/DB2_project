@@ -4,7 +4,6 @@ import it.polimi.db2.DB2_project.GmaEJB.Entities.Access;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.Questionnaire;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -47,7 +46,7 @@ public class GoToQuestionnaire extends HttpServlet {
             return;
         }
         User u = (User)request.getSession().getAttribute("user");
-        Access access = accessBean.findAccess(LocalDate.now(), u);
+        Access access = accessBean.findAccessByUser(LocalDate.now(), u);
             if(access != null) {
                 //todo:set message on homepage
                 response.sendRedirect(homepath);

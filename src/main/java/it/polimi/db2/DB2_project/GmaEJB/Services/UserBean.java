@@ -68,8 +68,13 @@ public class UserBean {
     }
 
     public List<UserLeaderboard> retrieveLeaderboard() {
-        return em.createNamedQuery("User.getLeaderboard", User.class).
-                getResultList().stream().map(u-> new UserLeaderboard(u.getUsername(), u.getPoints())).
+        return em.createNamedQuery("User.getLeaderboard", User.class)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList().stream().map(u-> new UserLeaderboard(u.getUsername(), u.getPoints())).
                 collect(Collectors.toList());
+    }
+
+    public User findUser(Integer id) {
+        return em.find(User.class, id);
     }
 }

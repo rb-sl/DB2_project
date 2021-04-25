@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
     <title>Gamified Marketing Application</title>
 </head>
 <body>
@@ -18,5 +19,23 @@
     <div th:utext="${canCompile && product && !isBanned} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
     <a href="GoToLeaderboard">Leaderboards</a>
     <a href="Logout">Logout</a>
+
+    <h3>Latest reviews from other users</h3>
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>User</th>
+            <div th:each="q: ${questions}">
+                <th th:text="${q.getText()}"></th>
+            </div>
+        </tr>
+        <tr th:each="a: ${accesses}">
+            <td th:text="${a.getAccessTime()}"></td>
+            <td th:text="${a.getUser().getUsername()}"></td>
+            <div th:each="q: ${questions}">
+                <td th:text="${a.getAnswers().get(q)}"></td>
+            </div>
+        </tr>
+    </table>
 </body>
 </html>

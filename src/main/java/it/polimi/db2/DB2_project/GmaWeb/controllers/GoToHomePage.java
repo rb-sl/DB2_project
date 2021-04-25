@@ -2,9 +2,11 @@ package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
 import it.polimi.db2.DB2_project.GmaEJB.Entities.Access;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Question;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,6 +19,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "GoToHomePage", value = "/GoToHomePage")
 public class GoToHomePage extends HttpServlet {
@@ -24,6 +29,10 @@ public class GoToHomePage extends HttpServlet {
     private ProductBean productBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
     private AccessBean accessBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
+    private QuestionnaireBean questionnaireBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/UserBean")
+    private UserBean userBean;
 
     private TemplateEngine templateEngine;
 
@@ -46,10 +55,7 @@ public class GoToHomePage extends HttpServlet {
             return;
         }
         User u = (User)request.getSession().getAttribute("user");
-        Access access = accessBean.findAccess(LocalDate.now(), u);
-
-
-
+        Access access = accessBean.findAccessByUser(LocalDate.now(), u);
 
         String path = "/home.html";
         ServletContext servletContext = getServletContext();
@@ -62,6 +68,20 @@ public class GoToHomePage extends HttpServlet {
         ctx.setVariable("canCompile", access == null);
 
         ctx.setVariable("isBanned", u.getBanned());
+
+        // Review variables
+        List<Question> questions = questionnaireBean.findQuestionnaireByDate(LocalDate.now()).getQuestions();
+        ctx.setVariable("questions", questions);
+
+//        Map<User, Access> userAccessMap = new HashMap<>();
+//        User temp;
+        List<Access> accesses = accessBean.findAccessesByDate(LocalDate.now());
+//        for(Access a: accesses) {
+//            temp = userBean.findUser(a.getUser())
+//            userAccessMap
+//        }
+
+        ctx.setVariable("accesses", accesses);
 
         templateEngine.process(path, ctx, response.getWriter());
     }

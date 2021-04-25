@@ -5,7 +5,6 @@ import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -15,7 +14,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +57,7 @@ public class CompileQuestionnaire extends HttpServlet {
         }
         User u = (User)request.getSession().getAttribute("user");
 
-        Access access = accessBean.findAccess(LocalDate.now(), u);
+        Access access = accessBean.findAccessByUser(LocalDate.now(), u);
         if(u.getBanned() || access != null) {
             response.sendRedirect(homepath);
             return;

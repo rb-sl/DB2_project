@@ -51,7 +51,7 @@ public class DiscardQuestionnaire extends HttpServlet {
             return;
         }
         User u = (User)request.getSession().getAttribute("user");
-        Access access = accessBean.findAccess(LocalDate.now(), u);
+        Access access = accessBean.findAccessByUser(LocalDate.now(), u);
         if(access != null || u.getBanned()) {
             response.sendRedirect(homepath);
             return;
