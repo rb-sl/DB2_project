@@ -1,5 +1,5 @@
 .idea/
 .idea/**
-/Project_ingsw.iml/
-/target
-/target/**
+*.iml
+target
+target/**
