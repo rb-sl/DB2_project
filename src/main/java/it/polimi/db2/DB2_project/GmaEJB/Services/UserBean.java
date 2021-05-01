@@ -46,7 +46,7 @@ public class UserBean {
         return !(userList == null || userList.isEmpty());
     }
 
-    public void createUser(String user, String password, String email) {
+    public User createUser(String user, String password, String email) {
         User newUser = new User();
 
         newUser.setUsername(user);
@@ -58,8 +58,11 @@ public class UserBean {
         newUser.setEmail(email);
         newUser.setPoints(0);
         newUser.setIsAdmin(false);
+        newUser.setBanned(false);
 
         em.persist(newUser);
+
+        return newUser;
     }
 
     public void banUser(User u){

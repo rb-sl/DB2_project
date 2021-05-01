@@ -18,6 +18,7 @@ public class QuestionnaireBean {
     public Questionnaire findQuestionnaireByDate(LocalDate date) {
         List<Questionnaire> qs = em.createNamedQuery("Questionnaire.findQuestionnaireByDate", Questionnaire.class)
                                 .setParameter(1, date)
+                                .setHint("javax.persistence.cache.storeMode", "REFRESH")
                                 .getResultList();
 
         if (qs == null || qs.isEmpty()) {

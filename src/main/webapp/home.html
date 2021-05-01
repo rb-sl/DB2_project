@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <title>Gamified Marketing Application</title>
-</head>
-<body>
-    <h1>Gamified Marketing Application</h1>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <title>Gamified Marketing Application</title>
+    </head>
+    <body>
+        <h1>Gamified Marketing Application</h1>
 
-    <h2>Product of the day</h2>
+        <p th:text="'Welcome ' + ${session.user.getUsername()} + '!'">
+        </p>
 
-    <div th:utext="${product} ? '<img src=\'' + *{'data:image/png;base64,' + product.getImage()} + '\' alt=\'Product of the day\'/>' : ''"></div>
+        <h2>Product of the day</h2>
 
-    <h3 th:text="${product} ? *{product.getName()} : 'No product available for today\'s questionnaire'"></h3>
+        <div th:utext="${product} ? '<img src=\'' + *{'data:image/png;base64,' + product.getImage()} + '\' alt=\'Product of the day\'/>' : ''"></div>
 
-    <h3 th:text="${isBanned} ? 'You have been banned and cannot compile any questionnaire' : ''" style="color:red"></h3>
+        <h3 th:text="${product} ? *{product.getName()} : 'No product available for today\'s questionnaire'"></h3>
 
-    <div th:utext="${canCompile && product && !isBanned} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
-    <a href="GoToLeaderboard">Leaderboards</a>
-    <a href="Logout">Logout</a>
+        <h3 th:text="${isBanned} ? 'You have been banned and cannot compile any questionnaire' : ''" style="color:red"></h3>
 
-    <h3>Latest reviews from other users</h3>
-    <table>
-        <tr>
-            <th>Time</th>
-            <th>User</th>
-            <div th:each="q: ${questions}">
-                <th th:text="${q.getText()}"></th>
-            </div>
-        </tr>
-        <tr th:each="a: ${accesses}">
-            <td th:text="${a.getAccessTime()}"></td>
-            <td th:text="${a.getUser().getUsername()}"></td>
-            <div th:each="q: ${questions}">
-                <td th:text="${a.getAnswers().get(q)}"></td>
-            </div>
-        </tr>
-    </table>
-</body>
+        <div th:utext="${canCompile && product && !isBanned} ? '<a href=\'GoToQuestionnaire\'>Go to the questionnaire</a>' : '<p>No questionnaire available</p>'"></div>
+        <a href="GoToLeaderboard">Leaderboards</a>
+
+        <div th:if="${questions}">
+            <h3>Latest reviews from other users</h3>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>User</th>
+                    <div th:each="q: ${questions}">
+                        <th th:text="${q.getText()}"></th>
+                    </div>
+                </tr>
+                <tr th:if="${accesses.isEmpty()}">
+                    <td th:colspan="${questions.size() + 2}" style="text-align: center">
+                        No previous reviews available
+                    </td>
+                </tr>
+                <tr th:each="a: ${accesses}">
+                    <td th:text="${a.getAccessTime()}"></td>
+                    <td th:text="${a.getUser().getUsername()}"></td>
+                    <div th:each="q: ${questions}">
+                        <td th:text="${a.getAnswers().get(q)}"></td>
+                    </div>
+                </tr>
+            </table>
+        </div>
+
+        <hr>
+        <a href="Logout">Logout</a>
+    </body>
 </html>

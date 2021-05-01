@@ -70,7 +70,8 @@ public class Login extends HttpServlet {
             templateEngine.process(path, ctx, response.getWriter());
         } else {
             request.getSession().setAttribute("user", user);
-            path = getServletContext().getContextPath() + "/GoToHomePage";
+            String target = (user.getIsAdmin()) ? "/admin.html" : "/GoToHomePage";
+            path = getServletContext().getContextPath() + target;
             response.sendRedirect(path);
         }
     }

@@ -1,5 +1,6 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
+import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -56,22 +57,21 @@ public class Signup extends HttpServlet {
             if(!userBean.isNameTaken(user)) {
                 System.out.println("usernottaken");
 
-                userBean.createUser(user, password, email);
+                User newUser = userBean.createUser(user, password, email);
+                request.getSession().setAttribute("user", newUser);
                 response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
             else {
                 System.out.println("usertaken");
-
                 message = "Username already taken";
             }
         }
         else {
-
             System.out.println("notisvalid");
-
             message = "Wrong email format";
         }
+
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

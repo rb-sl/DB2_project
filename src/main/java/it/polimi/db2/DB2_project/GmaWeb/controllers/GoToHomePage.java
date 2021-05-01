@@ -1,9 +1,6 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Access;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Question;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
@@ -49,6 +46,7 @@ public class GoToHomePage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String loginpath = getServletContext().getContextPath() + "/Login";
+        List<Question> questions = null;
 
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
@@ -70,16 +68,13 @@ public class GoToHomePage extends HttpServlet {
         ctx.setVariable("isBanned", u.getBanned());
 
         // Review variables
-        List<Question> questions = questionnaireBean.findQuestionnaireByDate(LocalDate.now()).getQuestions();
+        Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
+        if (questionnaire != null)
+            questions = questionnaire.getQuestions();
+
         ctx.setVariable("questions", questions);
 
-//        Map<User, Access> userAccessMap = new HashMap<>();
-//        User temp;
         List<Access> accesses = accessBean.findAccessesByDate(LocalDate.now());
-//        for(Access a: accesses) {
-//            temp = userBean.findUser(a.getUser())
-//            userAccessMap
-//        }
 
         ctx.setVariable("accesses", accesses);
 

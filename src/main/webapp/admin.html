@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <title>Gamified Marketing Application</title>
+    </head>
+    <body>
+        <h1>Gamified Marketing Application - Administration</h1>
+
+        <p th:text="'Welcome ' + ${session.user.getUsername()} + '!'">
+        </p>
+
+        <h2>Administration tools</h2>
+
+        <p>
+            <a href="CreateNewQuestionnaire">Create a new questionnaire</a>
+        </p>
+        <p>
+            <a href="InspectQuestionnaires">Inspect questionnaires</a>
+        </p>
+        <p>
+            <a href="DeleteQuestionnaire">Delete a questionnaire</a>
+        </p>
+
+        <p>
+            <hr>
+            <a href="Logout">Logout</a>
+        </p>
+    </body>
+</html>
