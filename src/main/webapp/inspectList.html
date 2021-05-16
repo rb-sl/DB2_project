@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Questionnaire list</title>
+</head>
+<body>
+<h1>Questionnaire list</h1>
+
+<p th:text="${errorMsg}" style="color: red"></p>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Product</th>
+        <th></th>
+    </tr>
+    <tr th:if="${questionnaireList == null || questionnaireList.isEmpty()}">
+        <td colspan="3" style="text-align: center">
+            No questionnaire available
+        </td>
+    </tr>
+    <tr th:each="q: ${questionnaireList}">
+        <td th:text="${q.getDate()}"></td>
+        <td th:text="${q.getProduct().getName()}"></td>
+        <td><a th:href="'InspectQuestionnaire?id=' + ${q.getQuest_id()}">Inspect</a></td>
+    </tr>
+</table>
+</body>
+</html>

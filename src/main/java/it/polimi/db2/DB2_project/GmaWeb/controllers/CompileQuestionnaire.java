@@ -77,19 +77,14 @@ public class CompileQuestionnaire extends HttpServlet {
         Sex sex = Sex.valueOf(request.getParameter("sex"));
         Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
 
-
-
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         List<Question> questionIds = questionnaire.getQuestions();
 
         for (Question q : questionIds) {
             answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
-            //System.out.println(answ.get(q.getQuestion_id()));
         }
 
         if(accessBean.hasBadword(answ)) {
-//            String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
-//            response.sendRedirect(path);
             response.sendRedirect(homepath);
             userBean.banUser(u);
             return;

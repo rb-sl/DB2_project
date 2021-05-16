@@ -27,4 +27,16 @@ public class QuestionnaireBean {
 
         return qs.get(0);
     }
+
+    public List<Questionnaire> findAll() {
+        List<Questionnaire> qs = em.createNamedQuery("Questionnaire.findAll", Questionnaire.class).getResultList();
+        if (qs == null || qs.isEmpty()) {
+            return null;
+        }
+        return qs;
+    }
+
+    public Questionnaire findById(Integer id){
+        return em.find(Questionnaire.class, id);
+    }
 }

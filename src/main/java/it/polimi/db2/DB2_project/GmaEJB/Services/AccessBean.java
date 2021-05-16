@@ -61,21 +61,25 @@ public class AccessBean {
     }
 
     public Access findAccessByUser(LocalDate date, User user) {
-        List<Access> list = em.createNamedQuery("Access.findByUser", Access.class)
+        List<Access> accesses = em.createNamedQuery("Access.findByUser", Access.class)
                 .setParameter(1, user)
                 .setParameter(2, date)
                 .getResultList();
 
-        if(list == null || list.isEmpty()) {
+        if(accesses == null || accesses.isEmpty()) {
             return null;
         }
 
-        return list.get(0);
+        return accesses.get(0);
     }
 
     public List<Access> findAccessesByDate(LocalDate date) {
-        return em.createNamedQuery("Access.findByDate", Access.class)
+        List<Access> accesses = em.createNamedQuery("Access.findByDate", Access.class)
                 .setParameter(1, date)
                 .getResultList();
+        if(accesses == null || accesses.isEmpty()) {
+            return null;
+        }
+        return accesses;
     }
 }

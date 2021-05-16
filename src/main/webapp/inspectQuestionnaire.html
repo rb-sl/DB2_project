@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Inspect questionnaire</title>
+</head>
+
+<body>
+    <h1>Inspect questionnaire</h1>
+
+    <h2>User answers</h2>
+
+    <h2>Users who discarded the questionnaire</h2>
+
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>User</th>
+        </tr>
+        <tr th:if="${questionnaire.getCanceled().isEmpty()}">
+            <td colspan="2" style="text-align: center">
+                No user canceled their questionnaire
+            </td>
+        </tr>
+        <tr th:each="c: ${questionnaire.getCanceled()}">
+            <td th:text="${c.getAccessTime()}"></td>
+            <td th:text="${c.getUser().getUsername()}"></td>
+        </tr>
+    </table>
+</body>
+</html>

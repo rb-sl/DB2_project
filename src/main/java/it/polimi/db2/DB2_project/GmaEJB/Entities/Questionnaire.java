@@ -3,11 +3,16 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "questionnaire")
 @NamedQuery(name = "Questionnaire.findQuestionnaireByDate",
         query = "SELECT q FROM Questionnaire q " +
                 "WHERE q.date=?1")
+@NamedQuery(name = "Questionnaire.findAll",
+        query = "SELECT q FROM Questionnaire q ORDER BY q.date DESC ")
+@NamedQuery(name = "Questionnaire.findById",
+        query = "SELECT q FROM Questionnaire q WHERE q.quest_id=?1")
 @Entity
 public class Questionnaire {
     @Id
@@ -24,7 +29,7 @@ public class Questionnaire {
     @JoinTable(name = "form",
             joinColumns = @JoinColumn(name = "quest_fk"),
             inverseJoinColumns = @JoinColumn(name = "question_fk"))
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Question> questions;
 
     @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
@@ -83,5 +88,14 @@ public class Questionnaire {
     @Override
     public int hashCode() {
         return 880705831;
+    }
+
+    public List<Access> getCanceled() {
+        return getAccesses().stream().filter(a -> a.getSex() == null && a.getAge() == null && a.getExpertise() == null)
+                .collect(Collectors.toList());
+    }
+    public List<Access> getSubmitted() {
+        return getAccesses().stream().filter(a -> a.getSex() != null && a.getAge() != null && a.getExpertise() != null)
+                .collect(Collectors.toList());
     }
 }
