@@ -27,10 +27,6 @@ import java.util.Map;
 public class GoToInspectQuestionnaire extends HttpServlet {
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
-    private AccessBean accessBean;
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/UserBean")
-    private UserBean userBean;
 
     private TemplateEngine templateEngine;
     private Map<Integer, String> answ = new HashMap<Integer, String>();
@@ -68,18 +64,13 @@ public class GoToInspectQuestionnaire extends HttpServlet {
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
         if(questionnaire == null) {
-            String inspectList = "/GoToInspectList";
+            String inspectList = getServletContext().getContextPath() + "/GoToInspectList";
 
-            request.setAttribute("errorMsg", 1);
-            getServletContext().getRequestDispatcher(inspectList).forward(request, response);
+            session.setAttribute("errorMsg", "The requested questionnaire does not exist");
+
+            response.sendRedirect(inspectList);
             return;
         }
-
-//        List<Question> questionIds = questionnaire.getQuestions();
-
-//        for (Question q : questionIds) {
-//            answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
-//        }
 
         ctx.setVariable("questionnaire", questionnaire);
 

@@ -1,9 +1,8 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
-import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Questionnaire;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -18,13 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "GoToInspectList", value = "/GoToInspectList")
-public class GoToInspectList extends HttpServlet {
+@WebServlet(name = "GoToDelete", value = "/GoToDelete")
+public class GoToDelete extends HttpServlet {
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
 
@@ -50,6 +48,7 @@ public class GoToInspectList extends HttpServlet {
             response.sendRedirect(loginpath);
             return;
         }
+
         User u = (User) request.getSession().getAttribute("user");
 
         if (!u.getIsAdmin()) {
@@ -70,7 +69,13 @@ public class GoToInspectList extends HttpServlet {
             session.removeAttribute("errorMsg");
         }
 
-        String path = "/inspectList";
+        String message = (String) session.getAttribute("msg");
+        if(error != null) {
+            ctx.setVariable("msg", message);
+            session.removeAttribute("msg");
+        }
+
+        String path = "/deleteList";
         templateEngine.process(path, ctx, response.getWriter());
     }
 

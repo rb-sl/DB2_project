@@ -11,6 +11,28 @@
 
     <h2>User answers</h2>
 
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>User</th>
+            <div th:each="q: ${questionnaire.getQuestions()}">
+                <th th:text="${q.getText()}"></th>
+            </div>
+        </tr>
+        <tr th:if="${questionnaire.getSubmitted().isEmpty()}">
+            <td th:colspan="${questionnaire.getQuestions().size() + 2}" style="text-align: center">
+                No submissions available
+            </td>
+        </tr>
+        <tr th:each="a: ${questionnaire.getSubmitted()}">
+            <td th:text="${a.getAccessTime()}"></td>
+            <td th:text="${a.getUser().getUsername()}"></td>
+            <div th:each="q: ${questionnaire.getQuestions()}">
+                <td th:text="${a.getAnswers().get(q)}"></td>
+            </div>
+        </tr>
+    </table>
+
     <h2>Users who discarded the questionnaire</h2>
 
     <table>

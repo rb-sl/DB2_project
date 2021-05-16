@@ -23,7 +23,7 @@
         <a href="GoToLeaderboard">Leaderboards</a>
 
         <div th:if="${questions}">
-            <h3>Latest reviews from other users</h3>
+            <h3>Latest reviews from other users <button th:if="${accesses.size() > 5}" onclick="toggleHiddenRows()">Show/Hide all</button></h3>
             <table>
                 <tr>
                     <th>Time</th>
@@ -37,7 +37,7 @@
                         No previous reviews available
                     </td>
                 </tr>
-                <tr th:each="a: ${accesses}">
+                <tr th:each="a, i: ${accesses}" th:class="${i.index >= 5 ? 'hiddenRow' : '' }">
                     <td th:text="${a.getAccessTime()}"></td>
                     <td th:text="${a.getUser().getUsername()}"></td>
                     <div th:each="q: ${questions}">
@@ -49,5 +49,20 @@
 
         <hr>
         <a href="Logout">Logout</a>
+
+        <script>
+            function toggleHiddenRows() {
+                var elems =  document.getElementsByClassName("hiddenRow");
+                var i;
+                for(i = 0; i < elems.length; i++) {
+                    if(elems[i].style.display === "table-row") {
+                        elems[i].style.display = "none";
+                    }
+                    else {
+                        elems[i].style.display = "table-row";
+                    }
+                }
+            }
+        </script>
     </body>
 </html>

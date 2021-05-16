@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <title>Questionnaire delete</title>
+</head>
+  <body>
+  		<h1>Questionnaire delete</h1>
+
+		<p th:text="${errorMsg}" style="color: red"></p>
+		<p th:text="${msg}"></p>
+
+		<form action="DeleteQuestionnaire" method="post">
+			<table>
+			<tr>
+				<th></th>
+				<th>Date</th>
+				<th>Product</th>
+			</tr>
+				<tr th:if="${questionnaireList.isEmpty()}">
+					<td colspan="3" style="text-align: center">
+					  No questionnaire available
+					</td>
+			  </tr>
+			  <tr th:each="q: ${questionnaireList}">
+				  <td><input type="checkbox" name="toDelete" th:value="${q.getQuest_id()}"></td>
+				  <td th:text="${q.getDate()}"></td>
+				  <td th:text="${q.getProduct().getName()}"></td>
+			  </tr>
+			</table>
+			<br>
+			<input type="submit" value="Delete selected">
+		</form>
+	  </body>
+</html>

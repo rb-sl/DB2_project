@@ -2,6 +2,7 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class Questionnaire {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "questionnaire") //No cascade because it's all managed by the database
     private List<Access> accesses;
 
     @JoinTable(name = "form",
@@ -96,6 +97,7 @@ public class Questionnaire {
     }
     public List<Access> getSubmitted() {
         return getAccesses().stream().filter(a -> a.getSex() != null && a.getAge() != null && a.getExpertise() != null)
+                .sorted(Comparator.comparing(Access::getAccessTime).reversed())
                 .collect(Collectors.toList());
     }
 }

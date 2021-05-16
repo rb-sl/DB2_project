@@ -29,7 +29,9 @@ public class QuestionnaireBean {
     }
 
     public List<Questionnaire> findAll() {
-        List<Questionnaire> qs = em.createNamedQuery("Questionnaire.findAll", Questionnaire.class).getResultList();
+        List<Questionnaire> qs = em.createNamedQuery("Questionnaire.findAll", Questionnaire.class)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList();
         if (qs == null || qs.isEmpty()) {
             return null;
         }
@@ -38,5 +40,14 @@ public class QuestionnaireBean {
 
     public Questionnaire findById(Integer id){
         return em.find(Questionnaire.class, id);
+    }
+
+    public int deleteQuestionnaire(Integer id) {
+        Questionnaire toDelete = findById(id);
+        if (toDelete != null) {
+            em.remove(toDelete);
+            return 1;
+        }
+        return 0;
     }
 }

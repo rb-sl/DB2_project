@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +71,7 @@ public class Access {
     }
 
     public LocalTime getAccessTime() {
-        return accessTime;
+        return accessTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
     public void setAccessTime(LocalTime accessTime) {
