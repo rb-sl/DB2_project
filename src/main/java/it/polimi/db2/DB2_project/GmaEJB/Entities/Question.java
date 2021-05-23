@@ -16,9 +16,6 @@ public class Question {
     @Column(name = "text", nullable = false, length = 65536)
     private String text;
 
-    @ManyToMany(mappedBy = "questions")
-    private List<Questionnaire> questionnaires;
-
     @ElementCollection
     @CollectionTable (name = "answer",
             joinColumns = @JoinColumn (name = "question_fk"))
@@ -26,11 +23,18 @@ public class Question {
     @Column(name = "text")
     private Map<Access, String> answers = new HashMap<>();
 
-    public List<Questionnaire> getQuestionnaires() {
+    @ElementCollection
+    @CollectionTable (name = "form",
+            joinColumns = @JoinColumn (name = "question_fk"))
+    @MapKeyJoinColumn (name = "quest_fk")
+    @Column(name = "order")
+    private Map<Questionnaire, Integer> questionnaires = new HashMap<>();
+
+    public Map<Questionnaire, Integer> getQuestionnaires() {
         return questionnaires;
     }
 
-    public void setQuestionnaires(List<Questionnaire> questionnaires) {
+    public void setQuestionnaires(Map<Questionnaire,Integer> questionnaires) {
         this.questionnaires = questionnaires;
     }
 

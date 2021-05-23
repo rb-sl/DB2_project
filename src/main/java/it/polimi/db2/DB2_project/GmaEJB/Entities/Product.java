@@ -12,6 +12,8 @@ import java.util.List;
         query = "SELECT p FROM Questionnaire q " +
                 "JOIN Product p ON q.product.prod_id=p.prod_id " +
                 "WHERE q.date=?1")
+@NamedQuery(name = "Product.findAll",
+        query = "SELECT p FROM Product p")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,13 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Questionnaire> questionnaires;
+
+    @Lob
+    @Column(name = "image", nullable = false)
+    private byte[] image;
+
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
 
     public Integer getProd_id() {
         return prod_id;
@@ -37,14 +46,6 @@ public class Product {
 
         return prod_id != null && prod_id.equals(product.prod_id);
     }
-
-    @Lob
-    @Column(name = "image", nullable = false)
-    private byte[] image;
-
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
-
     public List<Questionnaire> getQuestionnaires() {
         return questionnaires;
     }

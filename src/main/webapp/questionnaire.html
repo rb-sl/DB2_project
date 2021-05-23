@@ -7,13 +7,20 @@
 <body>
     <h1>Questionnaire of the day</h1>
 
-    <form method="POST">
-        <div id="closedquestions">
+    <form method="POST" id="form">
+        <div class="openquestions" th:each="question: ${questions}">
+            <p th:text="${question.text}"></p>
+            <textarea th:name="res+${question.question_id}" required></textarea>
+            <br><br>
+        </div>
+        <button type="button" id="btn_next" class="openquestions" onclick="showClosed()">Next</button>
+
+        <div id="closedquestions" style="display: none">
             Age: <input type="number" name="age" min="18" max="120"><br>
             Sex:
-                <label><input type="radio" name="sex" value="M">M</label>
-                <label><input type="radio" name="sex" value="F">F</label>
-                <label><input type="radio" name="sex" value="U" checked>No answer</label>
+            <label><input type="radio" name="sex" value="M">M</label>
+            <label><input type="radio" name="sex" value="F">F</label>
+            <label><input type="radio" name="sex" value="U" checked>No answer</label>
             <br>
             Expertise level:
             <select name="expertise">
@@ -22,13 +29,41 @@
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
             </select>
+            <br>
+            <br>
+            <button type="button" id="btn_back" onclick="showOpen()">Back</button>
+            <br>
+            <hr>
+            <input type="submit" formaction="CompileQuestionnaire" value="Submit">
+            <input type="submit" formaction="DiscardQuestionnaire" value="Cancel">
         </div>
-        <div id="openquestions" th:each="question: ${questions}">
-            <p th:text="${question.text}"></p>
-            <textarea th:name="res+${question.question_id}" required></textarea>
-        </div>
-        <input type="submit" formaction="CompileQuestionnaire" value="Submit">
-        <input type="submit" formaction="DiscardQuestionnaire" value="Cancel">
     </form>
+<script>
+    function showClosed() {
+        var form = document.getElementById("form");
+        var hidden = document.getElementById("closedquestions");
+        var shown = document.getElementsByClassName("openquestions");
+        var i;
+
+        if(form.checkValidity()) {
+            for (i = 0; i < shown.length; i++) {
+                shown[i].style.display = "none";
+            }
+            hidden.style.display = "block";
+        }
+        else {
+            form.reportValidity();
+        }
+    }
+    function showOpen() {
+        var shown = document.getElementById("closedquestions");
+        var hidden = document.getElementsByClassName("openquestions");
+        var i;
+        for (i = 0; i < hidden.length; i++) {
+            hidden[i].style.display = "block";
+        }
+        shown.style.display = "none";
+    }
+</script>
 </body>
 </html>

@@ -2,8 +2,7 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Table(name = "questionnaire")
@@ -27,11 +26,12 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire") //No cascade because it's all managed by the database
     private List<Access> accesses;
 
-    @JoinTable(name = "form",
-            joinColumns = @JoinColumn(name = "quest_fk"),
-            inverseJoinColumns = @JoinColumn(name = "question_fk"))
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Question> questions;
+    @ElementCollection
+    @CollectionTable (name = "form",
+            joinColumns = @JoinColumn (name = "quest_fk"))
+    @MapKeyJoinColumn (name = "question_fk")
+    @Column(name = "order")
+    private Map<Question, Integer> questions = new HashMap<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name = "product_fk", nullable = false)
@@ -46,10 +46,14 @@ public class Questionnaire {
     }
 
     public List<Question> getQuestions() {
-        return questions;
+        return questions.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
     }
 
-    public void setQuestions(List<Question> questions) {
+    public void setQuestions(Map<Question, Integer> questions) {
         this.questions = questions;
     }
 

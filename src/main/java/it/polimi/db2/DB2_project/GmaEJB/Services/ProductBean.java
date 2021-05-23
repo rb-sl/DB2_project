@@ -16,11 +16,18 @@ public class ProductBean {
     // Function that returns the product of a given day
     public Product findProductByDate(LocalDate date) {
         List<Product> products = em.createNamedQuery("Product.findProductByDate", Product.class)
-                                .setParameter(1, date)
-                                .getResultList();
+                .setParameter(1, date)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList();
         if (products == null || products.isEmpty()) {
             return null;
         }
         return products.get(0);
+    }
+    
+    public List<Product> findAllProducts() {
+        return em.createNamedQuery("Product.findAll", Product.class)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList();
     }
 }
