@@ -41,7 +41,7 @@ public class GoToDelete extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
-        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+        String homepath = getServletContext().getContextPath() + "/admin.html";
 
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
@@ -70,7 +70,7 @@ public class GoToDelete extends HttpServlet {
         }
 
         String message = (String) session.getAttribute("msg");
-        if(error != null) {
+        if(message != null) {
             ctx.setVariable("msg", message);
             session.removeAttribute("msg");
         }

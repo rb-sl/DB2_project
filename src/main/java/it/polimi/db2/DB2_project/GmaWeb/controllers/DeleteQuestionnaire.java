@@ -28,7 +28,6 @@ public class DeleteQuestionnaire extends HttpServlet {
     private QuestionnaireBean questionnaireBean;
 
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -47,7 +46,7 @@ public class DeleteQuestionnaire extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
-        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+        String homepath = getServletContext().getContextPath() + "/admin.html";
 
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {

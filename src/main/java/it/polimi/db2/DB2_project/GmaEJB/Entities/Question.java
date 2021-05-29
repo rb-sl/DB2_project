@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 @Table(name = "question")
+@NamedQuery(name = "Question.findAll",
+        query = "SELECT q FROM Question q")
+@NamedQuery(name = "Question.findByText",
+        query = "SELECT q FROM Question q WHERE q.text = ?1")
 @Entity
 public class Question {
     @Id
@@ -22,21 +26,6 @@ public class Question {
     @MapKeyJoinColumn (name = "access_fk")
     @Column(name = "text")
     private Map<Access, String> answers = new HashMap<>();
-
-    @ElementCollection
-    @CollectionTable (name = "form",
-            joinColumns = @JoinColumn (name = "question_fk"))
-    @MapKeyJoinColumn (name = "quest_fk")
-    @Column(name = "order")
-    private Map<Questionnaire, Integer> questionnaires = new HashMap<>();
-
-    public Map<Questionnaire, Integer> getQuestionnaires() {
-        return questionnaires;
-    }
-
-    public void setQuestionnaires(Map<Questionnaire,Integer> questionnaires) {
-        this.questionnaires = questionnaires;
-    }
 
     public String getText() {
         return text;

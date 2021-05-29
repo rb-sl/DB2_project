@@ -1,8 +1,11 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
 import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Question;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -20,12 +23,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "GoToCreate", value = "/GoToCreate")
 public class GoToCreate extends HttpServlet {
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/ProductBean")
     private ProductBean productBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionBean")
+    private QuestionBean questionBean;
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
+    private QuestionnaireBean questionnaireBean;
 
     private TemplateEngine templateEngine;
     private Map<Integer, String> answ = new HashMap<Integer, String>();
@@ -42,7 +50,7 @@ public class GoToCreate extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
-        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+        String homepath = getServletContext().getContextPath() + "/admin.html";
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
@@ -64,7 +72,23 @@ public class GoToCreate extends HttpServlet {
                 .collect(Collectors.toMap(Product::getProd_id, Product::getName));
         ctx.setVariable("miniProducts", miniProducts);
 
-        String path = "/createQuestionnaire";
+        List<Question> questions;
+        questions = questionBean.findAllQuestions();
+        Map<Integer, String> miniQuestions = questions.stream()
+                .collect(Collectors.toMap(Question::getQuestion_id, Question::getText));
+        ctx.setVariable("miniQuestions", miniQuestions);
+
+        List<String> dates;
+        dates = questionnaireBean.findAllDates();
+        ctx.setVariable("dates", dates);
+
+        String message = (String) session.getAttribute("msg");
+        if(message != null) {
+            ctx.setVariable("msg", message);
+            session.removeAttribute("msg");
+        }
+
+        String path = "/newQuestionnaire";
         templateEngine.process(path, ctx, response.getWriter());
     }
 

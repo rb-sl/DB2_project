@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+	<title>Create a new questionnaire</title>
+</head>
+<body>
+<h1>Create a new questionnaire</h1>
+
+<p th:text="${msg}" style="color: green"></p>
+
+<form action="CreateQuestionnaire" method="POST" enctype="multipart/form-data">
+	Questionnaire date: <input type="date" id="date" name="date" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+		th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" oninput="checkDate()" required>
+	<p id="errorMsg" class="inline-p" th:text="${errorMsg}" style="color: red"></p>
+	<br>
+	<br>
+	Product name: <input type="text" id="product" name="product" oninput="ACProducts()">
+	<label><input type="radio" id="newProduct" class="products" name="radioProduct" value="-1" oninput="checkProduct()" checked>New product</label><br>
+
+	<div id="prodSugg" style="display: none">
+		Similar previous products
+		<table>
+			<tbody id="previousProducts">
+			</tbody>
+		</table>
+		<br>
+	</div>
+
+	Product image (4MB max): <input type="file" id="image" name="image" accept="image/*" onchange="checkImage()" required>
+	<p id="errorImage" class="inline-p" style="color: red"></p><br>
+
+	<br>
+	<hr>
+	<br>
+	<div id="questSel" style="display: none">
+		Selected questions
+		<table>
+			<tbody id="selectedQuestions">
+			</tbody>
+		</table>
+		<br>
+	</div>
+
+	Add question: <input type="text" id="question" oninput="ACQuestions()">
+	<button type="button" id="addnew" onclick="addQuestion()">Add</button>
+	<br>
+	<div id="questSugg" style="display: none">
+		Similar previous questions
+		<table>
+			<tbody id="previousQuestions">
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<br>
+
+	<input id="submit" type="submit" value="Create questionnaire">
+</form>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var products = [[${miniProducts}]];
+    var questions = [[${miniQuestions}]];
+    var dates = [[${dates}]];
+	/*]]>*/
+
+    var prodMap = new Map();
+    Object.entries(products).forEach(([id, name]) => prodMap.set(id, name));
+    var questMap = new Map();
+	Object.entries(questions).forEach(([id, question]) => questMap.set(id, question));
+
+	var selectedQuest = new Map();
+
+    var maxForm = 1;
+    var formIds = 0;
+
+    checkDate();
+
+	function ACProducts() {
+	    var text = document.getElementById("product").value.toLowerCase();
+	    var table = document.getElementById("previousProducts");
+
+	    table.innerHTML = "";
+
+	    var resultNumber = 0;
+
+		if(text !== "") {
+            prodMap.forEach(function (name, id) {
+                if (resultNumber < 5 && name.toLowerCase().indexOf(text) >= 0) {
+                    table.innerHTML += "<tr><td><input type='radio' id='prod" + id + "' name='radioProduct' value='" + id
+						+ "' onchange='checkProduct()'/></td><td><label for='prod" + id + "'>" + name + "</label></td></tr>";
+                    resultNumber++;
+                }
+            })
+        }
+
+		if(resultNumber > 0) {
+            document.getElementById("prodSugg").style.display = "block";
+		}
+		else {
+            document.getElementById("prodSugg").style.display = "none";
+            document.getElementById("image").disabled = false;
+		}
+
+		document.getElementById("newProduct").checked = true;
+	}
+
+    function ACQuestions() {
+        var text = document.getElementById("question").value.toLowerCase();
+        var table = document.getElementById("previousQuestions");
+
+        table.innerHTML = "";
+
+        var resultNumber = 0;
+
+        if(text !== "") {
+            questMap.forEach(function (question, id) {
+                if (resultNumber < 5 && question.toLowerCase().indexOf(text) >= 0) {
+                    table.innerHTML += "<td>" + question + "</td>"
+						+ "<td><button type='button' id='add" + id + "' onclick='addQuestion(" + id + ")'>Add</button></td>";
+                    resultNumber++;
+                }
+            })
+        }
+
+        if(resultNumber > 0) {
+            document.getElementById("questSugg").style.display = "block";
+        }
+        else {
+            document.getElementById("questSugg").style.display = "none";
+        }
+    }
+
+    function addQuestion(id) {
+        var table = document.getElementById("selectedQuestions");
+        var question;
+
+	    if(id !== undefined) {
+            question = questMap.get(id.toString());
+		}
+	    else {
+			question = document.getElementById("question").value;
+		}
+
+	    if(!Array.from(selectedQuest.values()).includes(question)) {
+            selectedQuest.set(formIds, question);
+            table.innerHTML += "<tr id='tr" + formIds + "'><td id='order" + formIds + "' class='reorder'>"
+                + maxForm + "</td><td>" + question + "</td><td class='hiddenRow'> <input type='text' name='questions' value='"
+                + question + "'></td><td><button type='button' id='rem" + formIds + "' onclick='removeQuestion(" + formIds
+                + ")'>Remove</button></td></tr>";
+
+            maxForm++;
+            formIds++;
+
+            if(maxForm > 0) {
+                document.getElementById("questSel").style.display = "block";
+            }
+	    }
+	}
+
+    function removeQuestion(id) {
+	    selectedQuest.delete(id);
+
+	    document.getElementById("tr" + id).remove();
+        maxForm--;
+
+        var list = Array.from(document.getElementsByClassName("reorder"));
+
+        var current = 1;
+        list.forEach(function(td) {
+            td.textContent = current.toString();
+            current++;
+		});
+
+        if(maxForm === 0) {
+            document.getElementById("questSel").style.display = "none";
+        }
+    }
+
+    function checkDate() {
+        var date = document.getElementById("date").value;
+		var msg = document.getElementById("errorMsg");
+		var submit = document.getElementById("submit");
+
+        if (dates.includes(date)) {
+			msg.textContent = "A questionnaire for date " + date + " is already present";
+			submit.disabled = true;
+        } else {
+            msg.textContent = "";
+            submit.disabled = false;
+        }
+    }
+
+    function checkProduct() {
+	    if(document.getElementById("newProduct").checked) {
+	        document.getElementById("image").disabled = false;
+		}
+	    else {
+            document.getElementById("image").disabled = true;
+		}
+	}
+
+	function checkImage() {
+        var submit = document.getElementById("submit");
+        var msg = document.getElementById("errorImage");
+        var size = document.getElementById("image").files[0].size;
+
+        if(size > 4194304) {
+			msg.innerText = "Error: the file size is greater than 4MB"
+            submit.disabled = true;
+		}
+        else {
+            msg.innerText = "";
+            submit.disabled = false;
+		}
+
+	}
+</script>
+
+</body>
+</html>

@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
         query = "SELECT q FROM Questionnaire q ORDER BY q.date DESC ")
 @NamedQuery(name = "Questionnaire.findById",
         query = "SELECT q FROM Questionnaire q WHERE q.quest_id=?1")
+@NamedQuery(name = "Questionnaire.findAllDates",
+        query = "SELECT q.date FROM Questionnaire q")
 @Entity
 public class Questionnaire {
     @Id
@@ -30,7 +32,7 @@ public class Questionnaire {
     @CollectionTable (name = "form",
             joinColumns = @JoinColumn (name = "quest_fk"))
     @MapKeyJoinColumn (name = "question_fk")
-    @Column(name = "order")
+    @Column(name = "orderNumber")
     private Map<Question, Integer> questions = new HashMap<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
@@ -51,6 +53,10 @@ public class Questionnaire {
                 .sorted(Map.Entry.comparingByValue())
                 .map(e -> e.getKey())
                 .collect(Collectors.toList());
+    }
+
+    public void addQuestion(Question question, Integer id) {
+        this.questions.put(question, id);
     }
 
     public void setQuestions(Map<Question, Integer> questions) {

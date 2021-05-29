@@ -12,3 +12,8 @@ tr:nth-child(even) {
 .hiddenRow {
     display: none;
 }
+
+.inline-p {
+    display: inline-block;
+    margin: 0px;
+}
