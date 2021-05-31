@@ -2,7 +2,6 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Table(name = "question")
