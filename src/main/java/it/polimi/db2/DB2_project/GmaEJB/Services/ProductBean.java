@@ -1,8 +1,6 @@
 package it.polimi.db2.DB2_project.GmaEJB.Services;
 
 import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
-import it.polimi.db2.DB2_project.Hasher;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -11,7 +9,6 @@ import javax.servlet.http.Part;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.List;
 

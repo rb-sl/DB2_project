@@ -1,7 +1,5 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Access;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.UserLeaderboard;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
@@ -11,11 +9,14 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.ejb.EJB;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,6 @@ public class GoToLeaderboard extends HttpServlet {
         User u = (User)request.getSession().getAttribute("user");
 
         List<UserLeaderboard> leaderboard = userBean.retrieveLeaderboard();
-        for(UserLeaderboard ld: leaderboard) {
-            System.out.println(ld.getUsername() + " " + ld.getPoints());
-        }
 
         String path = "/leaderboard.html";
         ServletContext servletContext = getServletContext();
