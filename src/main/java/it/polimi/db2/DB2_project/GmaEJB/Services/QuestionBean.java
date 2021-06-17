@@ -34,7 +34,7 @@ public class QuestionBean {
                 .setParameter(1, text)
                 .setHint("javax.persistence.cache.storeMode", "REFRESH")
                 .getResultList();
-        if(questions != null) {
+        if(questions != null && !questions.isEmpty()) {
             return questions.get(0);
         }
         return null;
