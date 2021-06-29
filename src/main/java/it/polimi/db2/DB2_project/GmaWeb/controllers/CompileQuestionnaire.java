@@ -46,7 +46,7 @@ public class CompileQuestionnaire extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String loginpath = getServletContext().getContextPath() + "/Login";
+        String loginpath = getServletContext().getContextPath() + "/index.html";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
         Short age = 0;
 

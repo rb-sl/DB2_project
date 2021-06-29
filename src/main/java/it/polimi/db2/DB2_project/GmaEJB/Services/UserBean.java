@@ -24,6 +24,7 @@ public class UserBean {
             user = em.createNamedQuery("User.login", User.class)
                     .setParameter(1, username)
                     .setParameter(2, Hasher.SHA2(password))
+                    .setHint("javax.persistence.cache.storeMode", "REFRESH")
                     .getResultList();
 
         } catch(Exception e) {
@@ -36,7 +37,10 @@ public class UserBean {
     }
 
     public Boolean isNameTaken(String username) {
-        List<User> userList = em.createNamedQuery("User.findByName", User.class).setParameter(1, username).getResultList();
+        List<User> userList = em.createNamedQuery("User.findByName", User.class)
+                .setParameter(1, username)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList();
 
         return !(userList == null || userList.isEmpty());
     }
@@ -70,9 +74,5 @@ public class UserBean {
                 .setHint("javax.persistence.cache.storeMode", "REFRESH")
                 .getResultList().stream().map(u-> new UserLeaderboard(u.getUsername(), u.getPoints())).
                 collect(Collectors.toList());
-    }
-
-    public User findUser(Integer id) {
-        return em.find(User.class, id);
     }
 }

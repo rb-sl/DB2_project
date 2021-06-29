@@ -53,10 +53,6 @@ public class AccessBean {
         return hasBadword;
     }
 
-    public Access retrieveAccess(){
-        return em.find(Access.class, 1);
-    }
-
     public Access findAccessByUser(LocalDate date, User user) {
         List<Access> accesses = em.createNamedQuery("Access.findByUser", Access.class)
                 .setParameter(1, user)
@@ -68,15 +64,5 @@ public class AccessBean {
         }
 
         return accesses.get(0);
-    }
-
-    public List<Access> findAccessesByDate(LocalDate date) {
-        List<Access> accesses = em.createNamedQuery("Access.findByDate", Access.class)
-                .setParameter(1, date)
-                .getResultList();
-        if(accesses == null || accesses.isEmpty()) {
-            return null;
-        }
-        return accesses;
     }
 }

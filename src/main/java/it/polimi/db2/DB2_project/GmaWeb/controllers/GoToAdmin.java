@@ -1,7 +1,10 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Questionnaire;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
+import it.polimi.db2.DB2_project.GmaEJB.Entities.Question;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
+import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -18,13 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@WebServlet(name = "InspectQuestionnaire", value = "/InspectQuestionnaire")
-public class GoToInspectQuestionnaire extends HttpServlet {
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
-    private QuestionnaireBean questionnaireBean;
-
+@WebServlet(name = "GoToAdmin", value = "/GoToAdmin")
+public class GoToAdmin extends HttpServlet {
     private TemplateEngine templateEngine;
     private Map<Integer, String> answ = new HashMap<Integer, String>();
 
@@ -41,37 +43,28 @@ public class GoToInspectQuestionnaire extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/index.html";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
-
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
             return;
         }
 
-        User u = (User)request.getSession().getAttribute("user");
+        User u = (User) request.getSession().getAttribute("user");
 
         if (!u.getIsAdmin()) {
             response.sendRedirect(homepath);
             return;
         }
-
-        Questionnaire questionnaire = questionnaireBean.findById(Integer.valueOf(request.getParameter("id")));
-
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-        if(questionnaire == null) {
-            String inspectList = getServletContext().getContextPath() + "/GoToInspectList";
-
-            session.setAttribute("errorMsg", "The requested questionnaire does not exist");
-
-            response.sendRedirect(inspectList);
-            return;
+        String message = (String) session.getAttribute("msg");
+        if(message != null) {
+            ctx.setVariable("msg", message);
+            session.removeAttribute("msg");
         }
 
-        ctx.setVariable("questionnaire", questionnaire);
-
-        String path = "/inspectQuestionnaire";
+        String path = "/admin";
         templateEngine.process(path, ctx, response.getWriter());
     }
 

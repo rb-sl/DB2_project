@@ -48,8 +48,8 @@ public class GoToCreate extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String loginpath = getServletContext().getContextPath() + "/Login";
-        String homepath = getServletContext().getContextPath() + "/admin.html";
+        String loginpath = getServletContext().getContextPath() + "/index.html";
+        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
