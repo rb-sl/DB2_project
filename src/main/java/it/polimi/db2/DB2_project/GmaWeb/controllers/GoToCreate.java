@@ -81,10 +81,10 @@ public class GoToCreate extends HttpServlet {
         dates = questionnaireBean.findAllDates();
         ctx.setVariable("dates", dates);
 
-        String message = (String) session.getAttribute("msg");
+        String message = (String) session.getAttribute("errorMsg");
         if(message != null) {
-            ctx.setVariable("msg", message);
-            session.removeAttribute("msg");
+            ctx.setVariable("errorMsg", message);
+            session.removeAttribute("errorMsg");
         }
 
         String path = "/newQuestionnaire";

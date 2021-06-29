@@ -69,8 +69,8 @@ public class QuestionnaireBean {
         Questionnaire newQuestionnaire = new Questionnaire();
         newQuestionnaire.setDate(date);
         newQuestionnaire.setQuestions(questionMap);
-        newQuestionnaire.setProduct(product);
+        newQuestionnaire.setProduct(em.find(Product.class, product.getProd_id()));
         em.persist(newQuestionnaire);
-        return  newQuestionnaire;
+        return newQuestionnaire;
     }
 }

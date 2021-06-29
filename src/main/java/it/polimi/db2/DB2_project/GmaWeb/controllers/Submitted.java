@@ -39,7 +39,6 @@ public class Submitted extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Hello2");
         String loginpath = getServletContext().getContextPath() + "/Login";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
         HttpSession session = request.getSession();

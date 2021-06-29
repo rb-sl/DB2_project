@@ -79,9 +79,16 @@ public class CreateQuestionnaire extends HttpServlet {
 
         // Product creation or retrieval
         String productName = request.getParameter("product");
+        String radio = request.getParameter("radioProduct");
+        if (radio == null || (Integer.parseInt(radio) == -1 && (productName.isEmpty() || request.getParameter("image") == null))){
+            session.setAttribute("errorMsg", "Please fill all the fields of creation form");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
+            return;
+        }
 
         Product product;
-        Integer productId = Integer.parseInt(request.getParameter("radioProduct"));
+        Integer productId = Integer.parseInt(radio);
+
         if(productId == -1) {
             Part imageFile = request.getPart("image");
             product = productBean.createProduct(productName, imageFile);
@@ -92,6 +99,11 @@ public class CreateQuestionnaire extends HttpServlet {
 
         // Question creation or retrieval
         String[] newQuestions = request.getParameterValues("questions");
+        if (newQuestions == null || newQuestions.length == 0) {
+            session.setAttribute("errorMsg", "No questions inserted. Please insert at least one question for the questionnaire");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
+            return;
+        }
         Map<Question, Integer> quests = new HashMap<>();
 
         for (int i = 0; i < newQuestions.length; i++) {

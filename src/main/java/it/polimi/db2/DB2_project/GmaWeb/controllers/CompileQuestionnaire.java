@@ -67,7 +67,6 @@ public class CompileQuestionnaire extends HttpServlet {
         if (resultAge != null && !resultAge.isEmpty()) {
             age = Short.parseShort(resultAge);
             if(age <= 0 || age > 99) {
-                // todo if resilience: answer with user's input
                 String path = getServletContext().getContextPath() + "/GoToQuestionnaire";
                 response.sendRedirect(path);
                 return;
@@ -78,6 +77,11 @@ public class CompileQuestionnaire extends HttpServlet {
         Expertise ex = Expertise.valueOf(request.getParameter("expertise"));
 
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
+        if(questionnaire == null) {
+            response.sendRedirect(homepath);
+            return;
+        }
+
         List<Question> questionIds = questionnaire.getQuestions();
 
         for (Question q : questionIds) {

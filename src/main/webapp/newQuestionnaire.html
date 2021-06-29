@@ -186,11 +186,11 @@
 
         if (dates.includes(date)) {
 			msg.textContent = "A questionnaire for date " + date + " is already present";
-			submit.disabled = true;
         } else {
             msg.textContent = "";
-            submit.disabled = false;
         }
+
+        changeSubmitState();
     }
 
     function checkProduct() {
@@ -203,19 +203,29 @@
 	}
 
 	function checkImage() {
-        var submit = document.getElementById("submit");
         var msg = document.getElementById("errorImage");
         var size = document.getElementById("image").files[0].size;
 
         if(size > 4194304) {
 			msg.innerText = "Error: the file size is greater than 4MB"
-            submit.disabled = true;
 		}
         else {
             msg.innerText = "";
-            submit.disabled = false;
 		}
 
+        changeSubmitState();
+    }
+
+	function changeSubmitState() {
+        var date = document.getElementById("date").value;
+        var submit = document.getElementById("submit");
+        var size = 0;
+
+        if(document.getElementById("image").files[0] !== undefined) {
+            size = document.getElementById("image").files[0].size;
+		}
+
+        submit.disabled = dates.includes(date) || size > 4194304;
 	}
 </script>
 

@@ -58,7 +58,10 @@ public class DiscardQuestionnaire extends HttpServlet {
         }
 
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
-        List<Question> questionIds = questionnaire.getQuestions();
+        if (questionnaire == null) {
+            response.sendRedirect(homepath);
+            return;
+        }
 
         accessBean.createAccess(u, null, null, null, null);
 
