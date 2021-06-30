@@ -34,10 +34,6 @@ public class Product {
         return prod_id;
     }
 
-    public void setProd_id(Integer prod_id) {
-        this.prod_id = prod_id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,13 +41,6 @@ public class Product {
         Product product = (Product) o;
 
         return prod_id != null && prod_id.equals(product.prod_id);
-    }
-    public List<Questionnaire> getQuestionnaires() {
-        return questionnaires;
-    }
-
-    public void setQuestionnaires(List<Questionnaire> questionnaires) {
-        this.questionnaires = questionnaires;
     }
 
     public String getImage()  {

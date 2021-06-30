@@ -30,8 +30,6 @@ public class GoToHomePage extends HttpServlet {
     private AccessBean accessBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/UserBean")
-    private UserBean userBean;
 
     private TemplateEngine templateEngine;
 

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ public class GoToInspectList extends HttpServlet {
     private QuestionnaireBean questionnaireBean;
 
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -55,7 +55,7 @@ public class GoToInspectList extends HttpServlet {
             return;
         }
 
-        List<Questionnaire> questionnaireList = questionnaireBean.findAll();
+        List<Questionnaire> questionnaireList = questionnaireBean.findUntil(LocalDate.now());
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

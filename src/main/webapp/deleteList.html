@@ -18,7 +18,7 @@
 			<th>Date</th>
 			<th>Product</th>
 		</tr>
-			<tr th:if="${questionnaireList.isEmpty()}">
+			<tr th:if="${questionnaireList == null || questionnaireList.isEmpty()}">
 				<td colspan="3" style="text-align: center">
 				  No questionnaire available
 				</td>
@@ -33,7 +33,7 @@
 		<input id="submit" type="submit" value="Delete selected" disabled>
 	</form>
 	<hr>
-	<a href="admin.html">Home</a>
+	<a href="GoToAdmin">Home</a>
 	<script>
 		function validate() {
 		    var atLeastOne = false;

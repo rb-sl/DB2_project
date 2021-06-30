@@ -19,9 +19,6 @@ import java.io.IOException;
 
 @WebServlet(name = "Submitted", value = "/Submitted")
 public class Submitted extends HttpServlet {
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
-    private AccessBean accessBean;
-
     private TemplateEngine templateEngine;
 
     public void init() throws ServletException {
@@ -41,6 +38,7 @@ public class Submitted extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/Login";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+
         HttpSession session = request.getSession();
         Integer result;
         if (session.isNew() || session.getAttribute("user") == null) {

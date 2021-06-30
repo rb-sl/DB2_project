@@ -38,14 +38,6 @@ public class Question {
         return question_id;
     }
 
-    public void setQuestion_id(Integer question_id) {
-        this.question_id = question_id;
-    }
-
-    public Map<Access, String> getAnswers() {
-        return answers;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

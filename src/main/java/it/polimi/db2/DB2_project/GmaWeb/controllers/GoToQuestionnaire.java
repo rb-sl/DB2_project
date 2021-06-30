@@ -40,23 +40,23 @@ public class GoToQuestionnaire extends HttpServlet {
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
         String loginpath = getServletContext().getContextPath() + "/index.html";
         String homepath = getServletContext().getContextPath() + "/GoToHomePage";
+
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
             return;
         }
+
         User u = (User)request.getSession().getAttribute("user");
         Access access = accessBean.findAccessByUser(LocalDate.now(), u);
-            if(access != null) {
-                //todo:set message on homepage
-                response.sendRedirect(homepath);
-                return;
+        if(access != null) {
+            response.sendRedirect(homepath);
+            return;
         }
+
         String path = "/questionnaire.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
-
 
         ctx.setVariable("questions", questionnaire.getQuestions());
         templateEngine.process(path, ctx, response.getWriter());

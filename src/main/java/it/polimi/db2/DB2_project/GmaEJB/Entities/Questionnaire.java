@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
                 "WHERE q.date=?1")
 @NamedQuery(name = "Questionnaire.findAll",
         query = "SELECT q FROM Questionnaire q ORDER BY q.date DESC ")
+@NamedQuery(name = "Questionnaire.findUntil",
+        query = "SELECT q FROM Questionnaire q " +
+                "WHERE q.date<=?1 ORDER BY q.date DESC")
 @NamedQuery(name = "Questionnaire.findById",
         query = "SELECT q FROM Questionnaire q WHERE q.quest_id=?1")
 @NamedQuery(name = "Questionnaire.findAllDates",
@@ -25,7 +28,7 @@ public class Questionnaire {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(mappedBy = "questionnaire") //No cascade because it's all managed by the database
+    @OneToMany(mappedBy = "questionnaire") // No cascade because it's all managed by the database
     private List<Access> accesses;
 
     @ElementCollection
@@ -55,20 +58,12 @@ public class Questionnaire {
                 .collect(Collectors.toList());
     }
 
-    public void addQuestion(Question question, Integer id) {
-        this.questions.put(question, id);
-    }
-
     public void setQuestions(Map<Question, Integer> questions) {
         this.questions = questions;
     }
 
     public List<Access> getAccesses() {
         return accesses;
-    }
-
-    public void setAccesses(List<Access> accesses) {
-        this.accesses = accesses;
     }
 
     public LocalDate getDate() {
@@ -81,10 +76,6 @@ public class Questionnaire {
 
     public Integer getQuest_id() {
         return quest_id;
-    }
-
-    public void setQuest_id(Integer quest_id) {
-        this.quest_id = quest_id;
     }
 
     @Override
@@ -105,6 +96,7 @@ public class Questionnaire {
         return getAccesses().stream().filter(a -> a.getSex() == null && a.getAge() == null && a.getExpertise() == null)
                 .collect(Collectors.toList());
     }
+
     public List<Access> getSubmitted() {
         return getAccesses().stream().filter(a -> a.getSex() != null && a.getAge() != null && a.getExpertise() != null)
                 .sorted(Comparator.comparing(Access::getAccessTime).reversed())

@@ -42,6 +42,16 @@ public class QuestionnaireBean {
         return qs;
     }
 
+    public List<Questionnaire> findUntil(LocalDate date) {
+        List<Questionnaire> qs = em.createNamedQuery("Questionnaire.findUntil", Questionnaire.class)
+                .setParameter(1, date)
+                .setHint("javax.persistence.cache.storeMode", "REFRESH")
+                .getResultList();
+        if (qs == null || qs.isEmpty()) {
+            return null;
+        }
+        return qs;
+    }
 
     public List<String> findAllDates() {
         List<String> dates = em.createNamedQuery("Questionnaire.findAllDates", LocalDate.class)

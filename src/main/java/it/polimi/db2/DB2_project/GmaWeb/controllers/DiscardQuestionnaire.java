@@ -14,7 +14,6 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "DiscardQuestionnaire", value = "/DiscardQuestionnaire")
@@ -25,7 +24,6 @@ public class DiscardQuestionnaire extends HttpServlet {
     private AccessBean accessBean;
 
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();

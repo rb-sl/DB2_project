@@ -2,11 +2,8 @@ package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,10 +113,6 @@ public class Access {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public LocalDate getAccessDate() {
-        return accessDate;
     }
 
     public void setAccessDate(LocalDate accessDate) {

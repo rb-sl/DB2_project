@@ -1,17 +1,11 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Product;
-import it.polimi.db2.DB2_project.GmaEJB.Entities.Question;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
-import it.polimi.db2.DB2_project.GmaEJB.Services.ProductBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionBean;
-import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,14 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @WebServlet(name = "GoToAdmin", value = "/GoToAdmin")
 public class GoToAdmin extends HttpServlet {
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();

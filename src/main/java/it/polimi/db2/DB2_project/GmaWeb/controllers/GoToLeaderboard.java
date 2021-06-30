@@ -1,6 +1,5 @@
 package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
-import it.polimi.db2.DB2_project.GmaEJB.Entities.User;
 import it.polimi.db2.DB2_project.GmaEJB.Entities.UserLeaderboard;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
@@ -27,7 +26,6 @@ public class GoToLeaderboard extends HttpServlet {
     private UserBean userBean;
 
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -41,14 +39,12 @@ public class GoToLeaderboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginpath = getServletContext().getContextPath() + "/index.html";
-        String homepath = getServletContext().getContextPath() + "/GoToHomePage";
 
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
             return;
         }
-        User u = (User)request.getSession().getAttribute("user");
 
         List<UserLeaderboard> leaderboard = userBean.retrieveLeaderboard();
 

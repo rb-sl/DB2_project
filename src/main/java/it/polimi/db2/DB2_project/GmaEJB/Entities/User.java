@@ -1,6 +1,5 @@
 package it.polimi.db2.DB2_project.GmaEJB.Entities;
 
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
 @NamedQuery(name = "User.findByName",
         query = "SELECT u FROM User u WHERE u.username=?1")
 @NamedQuery(name = "User.getLeaderboard",
-        query = "SELECT u FROM User u ORDER BY u.points DESC")
+        query = "SELECT u FROM User u WHERE NOT u.isAdmin ORDER BY u.points DESC")
 @Entity
 public class User {
     @Id
@@ -40,24 +39,12 @@ public class User {
         return isBanned;
     }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
-
     public void setBanned(Boolean banned) {
         isBanned = banned;
     }
 
     @Column(name = "isBanned", nullable = false)
     private Boolean isBanned;
-
-    public List<Access> getAccess() {
-        return access;
-    }
-
-    public void setAccess(List<Access> access) {
-        this.access = access;
-    }
 
     public Integer getPoints() {
         return points;
@@ -75,16 +62,8 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {

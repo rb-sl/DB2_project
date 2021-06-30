@@ -17,3 +17,8 @@ tr:nth-child(even) {
     display: inline-block;
     margin: 0px;
 }
+
+img {
+    max-width: 400px;
+    max-height: 80vh;
+}

@@ -19,10 +19,6 @@ public class QuestionBean {
         return newQuestion;
     }
 
-    public void addQuestionnaire(Questionnaire questionnaire, String questId, Integer i){
-        Question question = em.find(Question.class, Integer.parseInt(questId));
-    }
-
     public List<Question> findAllQuestions() {
         return em.createNamedQuery("Question.findAll", Question.class)
                 .setHint("javax.persistence.cache.storeMode", "REFRESH")

@@ -88,7 +88,8 @@ public class CreateQuestionnaire extends HttpServlet {
         // Product creation or retrieval
         String productName = request.getParameter("product");
         String radio = request.getParameter("radioProduct");
-        if (radio == null || (Integer.parseInt(radio) == -1 && (productName.isEmpty() || request.getParameter("image") == null))){
+        if (radio == null || (Integer.parseInt(radio) == -1 && (productName.isEmpty()
+                || request.getPart("image").getSubmittedFileName().equals("")))){
             session.setAttribute("errorMsg", "Please fill all the fields of creation form");
             response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
             return;
@@ -99,12 +100,17 @@ public class CreateQuestionnaire extends HttpServlet {
 
         if(productId == -1) {
             Part imageFile = request.getPart("image");
+            if(imageFile.getSize() > 4194304) {
+                session.setAttribute("errorMsg", "Could not insert: image too large");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
+                return;
+            }
+
             product = productBean.createProduct(productName, imageFile);
         }
         else {
             product = productBean.findProductById(productId);
         }
-
 
         Map<Question, Integer> quests = new HashMap<>();
 

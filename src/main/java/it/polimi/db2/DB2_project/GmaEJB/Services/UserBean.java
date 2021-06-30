@@ -26,7 +26,6 @@ public class UserBean {
                     .setParameter(2, Hasher.SHA2(password))
                     .setHint("javax.persistence.cache.storeMode", "REFRESH")
                     .getResultList();
-
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }

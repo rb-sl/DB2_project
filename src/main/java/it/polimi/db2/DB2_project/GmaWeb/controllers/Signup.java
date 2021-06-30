@@ -51,7 +51,6 @@ public class Signup extends HttpServlet {
         System.out.println("doPost");
 
         if(isValid(email)) {
-
             System.out.println("isvalid");
 
             if(!userBean.isNameTaken(user)) {
@@ -72,7 +71,6 @@ public class Signup extends HttpServlet {
             message = "Wrong email format";
         }
 
-
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("errorMsg", message);
@@ -82,7 +80,7 @@ public class Signup extends HttpServlet {
 
     public static boolean isValid(String email)
     {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";

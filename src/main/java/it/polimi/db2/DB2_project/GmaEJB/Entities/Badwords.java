@@ -18,18 +18,6 @@ public class Badwords {
         return word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public Integer getWord_id() {
-        return word_id;
-    }
-
-    public void setWord_id(Integer word_id) {
-        this.word_id = word_id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

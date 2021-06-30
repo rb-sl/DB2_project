@@ -28,7 +28,6 @@ public class CompileQuestionnaire extends HttpServlet {
     private UserBean userBean;
 
     private TemplateEngine templateEngine;
-    private Map<Integer, String> answ = new HashMap<Integer, String>();
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -84,6 +83,7 @@ public class CompileQuestionnaire extends HttpServlet {
 
         List<Question> questionIds = questionnaire.getQuestions();
 
+        Map<Integer, String> answ = new HashMap<Integer, String>();
         for (Question q : questionIds) {
             answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
         }
