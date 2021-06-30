@@ -8,12 +8,13 @@
 <body>
 <h1>Create a new questionnaire</h1>
 
+<p id="errorMsg2" class="inline-p" th:text="${errorMsg}" style="color: red"></p>
 <p th:text="${msg}" style="color: green"></p>
 
 <form action="CreateQuestionnaire" method="POST" enctype="multipart/form-data">
 	Questionnaire date: <input type="date" id="date" name="date" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
 		th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" oninput="checkDate()" required>
-	<p id="errorMsg" class="inline-p" th:text="${errorMsg}" style="color: red"></p>
+	<p id="dateCheck" class="inline-p" style="color: red"></p>
 	<br>
 	<br>
 	Product name: <input type="text" id="product" name="product" oninput="ACProducts()">
@@ -58,6 +59,8 @@
 
 	<input id="submit" type="submit" value="Create questionnaire">
 </form>
+<hr>
+<a href="admin.html">Home</a>
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
@@ -158,7 +161,11 @@
                 document.getElementById("questSel").style.display = "block";
             }
 	    }
-	}
+
+        document.getElementById("question").value = "";
+	    ACQuestions();
+        document.getElementById("question").focus();
+    }
 
     function removeQuestion(id) {
 	    selectedQuest.delete(id);
@@ -181,7 +188,7 @@
 
     function checkDate() {
         var date = document.getElementById("date").value;
-		var msg = document.getElementById("errorMsg");
+		var msg = document.getElementById("dateCheck");
 		var submit = document.getElementById("submit");
 
         if (dates.includes(date)) {

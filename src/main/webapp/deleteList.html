@@ -5,32 +5,47 @@
   <link rel="stylesheet" href="style.css">
   <title>Questionnaire delete</title>
 </head>
-  <body>
-  		<h1>Questionnaire delete</h1>
+<body>
+	<h1>Questionnaire delete</h1>
 
-		<p th:text="${errorMsg}" style="color: red"></p>
-		<p th:text="${msg}"></p>
+	<p th:text="${errorMsg}" style="color: red"></p>
+	<p th:text="${msg}"></p>
 
-		<form action="DeleteQuestionnaire" method="post">
-			<table>
-			<tr>
-				<th></th>
-				<th>Date</th>
-				<th>Product</th>
-			</tr>
-				<tr th:if="${questionnaireList.isEmpty()}">
-					<td colspan="3" style="text-align: center">
-					  No questionnaire available
-					</td>
-			  </tr>
-			  <tr th:each="q: ${questionnaireList}">
-				  <td><input type="checkbox" name="toDelete" th:value="${q.getQuest_id()}"></td>
-				  <td th:text="${q.getDate()}"></td>
-				  <td th:text="${q.getProduct().getName()}"></td>
-			  </tr>
-			</table>
-			<br>
-			<input type="submit" value="Delete selected">
-		</form>
-	  </body>
+	<form action="DeleteQuestionnaire" method="post">
+		<table>
+		<tr>
+			<th></th>
+			<th>Date</th>
+			<th>Product</th>
+		</tr>
+			<tr th:if="${questionnaireList.isEmpty()}">
+				<td colspan="3" style="text-align: center">
+				  No questionnaire available
+				</td>
+		  </tr>
+		  <tr th:each="q: ${questionnaireList}">
+			  <td><input type="checkbox" name="toDelete" onchange="validate()" th:value="${q.getQuest_id()}"></td>
+			  <td th:text="${q.getDate()}"></td>
+			  <td th:text="${q.getProduct().getName()}"></td>
+		  </tr>
+		</table>
+		<br>
+		<input id="submit" type="submit" value="Delete selected" disabled>
+	</form>
+	<hr>
+	<a href="admin.html">Home</a>
+	<script>
+		function validate() {
+		    var atLeastOne = false;
+			var checkboxes = document.getElementsByName("toDelete");
+            checkboxes.forEach(function(chk) {
+                if(chk.checked) {
+                    atLeastOne = true;
+                }
+            });
+
+            document.getElementById("submit").disabled = !atLeastOne;
+		}
+	</script>
+</body>
 </html>

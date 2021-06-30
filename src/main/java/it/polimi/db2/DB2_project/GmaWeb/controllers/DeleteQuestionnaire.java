@@ -56,6 +56,11 @@ public class DeleteQuestionnaire extends HttpServlet {
         }
 
         String[] deleteIds = request.getParameterValues("toDelete");
+        if(deleteIds == null || deleteIds.length == 0) {
+            session.setAttribute("errorMsg", "No questionnaires selected");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToDelete");
+            return;
+        }
 
         int done = 0;
         for(String id: deleteIds) {

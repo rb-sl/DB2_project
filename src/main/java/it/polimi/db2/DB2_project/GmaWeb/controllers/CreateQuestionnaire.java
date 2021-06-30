@@ -72,7 +72,15 @@ public class CreateQuestionnaire extends HttpServlet {
         LocalDate date = LocalDate.parse(request.getParameter("date"), DateTimeFormatter.ISO_LOCAL_DATE);
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(date);
         if(questionnaire != null) {
-            session.setAttribute("errorMsg", "A questionnaire for date " + date.toString() + " is already present");
+            session.setAttribute("errorMsg", "Cannot create another questionnaire for date " + date.toString());
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
+            return;
+        }
+
+        // Question creation or retrieval
+        String[] newQuestions = request.getParameterValues("questions");
+        if (newQuestions == null || newQuestions.length == 0) {
+            session.setAttribute("errorMsg", "No questions inserted. Please insert at least one question for the questionnaire");
             response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
             return;
         }
@@ -97,13 +105,7 @@ public class CreateQuestionnaire extends HttpServlet {
             product = productBean.findProductById(productId);
         }
 
-        // Question creation or retrieval
-        String[] newQuestions = request.getParameterValues("questions");
-        if (newQuestions == null || newQuestions.length == 0) {
-            session.setAttribute("errorMsg", "No questions inserted. Please insert at least one question for the questionnaire");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToCreate");
-            return;
-        }
+
         Map<Question, Integer> quests = new HashMap<>();
 
         for (int i = 0; i < newQuestions.length; i++) {
