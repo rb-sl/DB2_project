@@ -48,6 +48,7 @@ public class GoToHomePage extends HttpServlet {
         String loginpath = getServletContext().getContextPath() + "/index.html";
         List<Question> questions = null;
         List<Access> accesses = null;
+        Product product = null;
 
         if (session.isNew() || session.getAttribute("user") == null) {
             response.sendRedirect(loginpath);
@@ -60,12 +61,8 @@ public class GoToHomePage extends HttpServlet {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-        Product product = productBean.findProductByDate(LocalDate.now());
-
-        ctx.setVariable("product", product);
         // Variable to know if the user has already compiled or discarded a questionnaire
         ctx.setVariable("canCompile", access == null);
-
         ctx.setVariable("isBanned", u.getBanned());
 
         // Review variables
@@ -73,8 +70,10 @@ public class GoToHomePage extends HttpServlet {
         if (questionnaire != null) {
             questions = questionnaire.getQuestions();
             accesses = questionnaire.getSubmitted();
+            product = questionnaire.getProduct();
         }
 
+        ctx.setVariable("product", product);
         ctx.setVariable("questions", questions);
         ctx.setVariable("accesses", accesses);
 

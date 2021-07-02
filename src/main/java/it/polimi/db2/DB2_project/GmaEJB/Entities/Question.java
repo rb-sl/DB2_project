@@ -19,7 +19,7 @@ public class Question {
     @Column(name = "text", nullable = false, length = 65536)
     private String text;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable (name = "answer",
             joinColumns = @JoinColumn (name = "question_fk"))
     @MapKeyJoinColumn (name = "access_fk")

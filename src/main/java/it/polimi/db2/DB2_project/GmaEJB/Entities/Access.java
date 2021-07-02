@@ -8,17 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Table(name = "access")
-@Entity
 @NamedQuery(name = "Access.findByUser",
         query = "select a from Access a where a.user = ?1 and a.accessDate = ?2")
-@NamedQuery(name = "Access.findByDate",
-        query = "select a from Access a where a.accessDate = ?1")
+@Entity
 public class Access {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_fk", nullable = false)
     private User user;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quest_fk", nullable = false)
     private Questionnaire questionnaire;
 

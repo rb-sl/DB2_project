@@ -20,9 +20,11 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
@@ -32,8 +34,11 @@ public class User {
     @Column(name = "points", nullable = false)
     private Integer points;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Access> access;
+
+    @Column(name = "isBanned", nullable = false)
+    private Boolean isBanned;
 
     public Boolean getBanned() {
         return isBanned;
@@ -42,9 +47,6 @@ public class User {
     public void setBanned(Boolean banned) {
         isBanned = banned;
     }
-
-    @Column(name = "isBanned", nullable = false)
-    private Boolean isBanned;
 
     public Integer getPoints() {
         return points;

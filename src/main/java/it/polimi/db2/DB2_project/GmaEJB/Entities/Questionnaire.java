@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @NamedQuery(name = "Questionnaire.findUntil",
         query = "SELECT q FROM Questionnaire q " +
                 "WHERE q.date<=?1 ORDER BY q.date DESC")
-@NamedQuery(name = "Questionnaire.findById",
-        query = "SELECT q FROM Questionnaire q WHERE q.quest_id=?1")
 @NamedQuery(name = "Questionnaire.findAllDates",
         query = "SELECT q.date FROM Questionnaire q")
 @Entity
@@ -38,7 +36,7 @@ public class Questionnaire {
     @Column(name = "orderNumber")
     private Map<Question, Integer> questions = new HashMap<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "product_fk", nullable = false)
     private Product product;
 
@@ -78,6 +76,17 @@ public class Questionnaire {
         return quest_id;
     }
 
+    public List<Access> getCanceled() {
+        return getAccesses().stream().filter(a -> a.getSex() == null && a.getAge() == null && a.getExpertise() == null)
+                .collect(Collectors.toList());
+    }
+
+    public List<Access> getSubmitted() {
+        return getAccesses().stream().filter(a -> a.getSex() != null && a.getAge() != null && a.getExpertise() != null)
+                .sorted(Comparator.comparing(Access::getAccessTime).reversed())
+                .collect(Collectors.toList());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,16 +99,5 @@ public class Questionnaire {
     @Override
     public int hashCode() {
         return 880705831;
-    }
-
-    public List<Access> getCanceled() {
-        return getAccesses().stream().filter(a -> a.getSex() == null && a.getAge() == null && a.getExpertise() == null)
-                .collect(Collectors.toList());
-    }
-
-    public List<Access> getSubmitted() {
-        return getAccesses().stream().filter(a -> a.getSex() != null && a.getAge() != null && a.getExpertise() != null)
-                .sorted(Comparator.comparing(Access::getAccessTime).reversed())
-                .collect(Collectors.toList());
     }
 }

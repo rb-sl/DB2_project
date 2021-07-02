@@ -7,13 +7,9 @@ import java.util.Base64;
 import java.util.List;
 
 @Table(name = "product")
-@Entity
-@NamedQuery(name = "Product.findProductByDate",
-        query = "SELECT p FROM Questionnaire q " +
-                "JOIN Product p ON q.product.prod_id=p.prod_id " +
-                "WHERE q.date=?1")
 @NamedQuery(name = "Product.findAll",
         query = "SELECT p FROM Product p")
+@Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,15 +30,6 @@ public class Product {
         return prod_id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-
-        return prod_id != null && prod_id.equals(product.prod_id);
-    }
-
     public String getImage()  {
         return Base64.getMimeEncoder().encodeToString(image);
     }
@@ -57,6 +44,15 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+
+        return prod_id != null && prod_id.equals(product.prod_id);
     }
 
     @Override
