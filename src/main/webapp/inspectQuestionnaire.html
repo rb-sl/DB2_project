@@ -9,7 +9,9 @@
 <body>
     <h1>Inspect questionnaire</h1>
 
-    <h2>User answers</h2>
+    <h2 th:text="${questionnaire.getDate()} + ': ' + ${questionnaire.getProduct().getName()}"></h2>
+
+    <h3>User answers</h3>
 
     <table>
         <tr>
@@ -33,7 +35,7 @@
         </tr>
     </table>
 
-    <h2>Users who discarded the questionnaire</h2>
+    <h3>Users who discarded the questionnaire</h3>
 
     <table>
         <tr>

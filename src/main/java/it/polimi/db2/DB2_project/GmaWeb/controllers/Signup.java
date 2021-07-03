@@ -44,35 +44,37 @@ public class Signup extends HttpServlet {
         String user = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-
         String path;
+
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+
+        if(user == null || user.isEmpty()
+                || password == null || password.isEmpty()
+                || email == null || email.isEmpty()) {
+            ctx.setVariable("errorMsg", "Invalid username, password or email");
+            path = "/signup.html";
+            templateEngine.process(path, ctx, response.getWriter());
+            return;
+        }
+
         String message = "";
 
-        System.out.println("doPost");
-
         if(isValid(email)) {
-            System.out.println("isvalid");
-
             if(!userBean.isNameTaken(user)) {
-                System.out.println("usernottaken");
-
                 User newUser = userBean.createUser(user, password, email);
                 request.getSession().setAttribute("user", newUser);
                 response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
             else {
-                System.out.println("usertaken");
                 message = "Username already taken";
             }
         }
         else {
-            System.out.println("notisvalid");
             message = "Wrong email format";
         }
 
-        ServletContext servletContext = getServletContext();
-        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("errorMsg", message);
         path = "/signup.html";
         templateEngine.process(path, ctx, response.getWriter());

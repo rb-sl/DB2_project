@@ -8,8 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Stateless
 public class AccessBean {
@@ -35,22 +34,6 @@ public class AccessBean {
             answ.forEach((key, text) -> access.addAnswer(em.find(Question.class, key), text));
         }
         em.persist(access);
-    }
-
-    public Boolean hasBadword(Map<Integer, String> answ) {
-        List<Badwords> badwords = badwordbean.getBadwords();
-
-        Boolean hasBadword = false;
-
-        if (badwords != null && !badwords.isEmpty()) {
-            for (Integer key : answ.keySet()) {
-                for (Badwords bad : badwords) {
-                    hasBadword = hasBadword || answ.get(key).contains(bad.getWord());
-                }
-            }
-        }
-
-        return hasBadword;
     }
 
     public Access findAccessByUser(LocalDate date, User user) {

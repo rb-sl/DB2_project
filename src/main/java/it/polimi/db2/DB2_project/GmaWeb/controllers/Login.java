@@ -43,17 +43,18 @@ public class Login extends HttpServlet {
         String username = null;
         String password = null;
         User user = null;
+        String path;
 
-        try {
-            username = StringEscapeUtils.escapeJava(request.getParameter("username"));
-            password = StringEscapeUtils.escapeJava(request.getParameter("password"));
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-            if(username == null || username.isEmpty()
-                    || password == null || password.isEmpty())
-                throw new Exception("Missing user/password");
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing user/password");
-            e.printStackTrace();
+        username = StringEscapeUtils.escapeJava(request.getParameter("username"));
+        password = StringEscapeUtils.escapeJava(request.getParameter("password"));
+
+        if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            ctx.setVariable("errorMsg", "Incorrect username or password");
+            path = "/index.html";
+            templateEngine.process(path, ctx, response.getWriter());
             return;
         }
 
@@ -63,10 +64,7 @@ public class Login extends HttpServlet {
             e.printStackTrace();
         }
 
-        String path;
         if (user == null) {
-            ServletContext servletContext = getServletContext();
-            final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             ctx.setVariable("errorMsg", "Incorrect username or password");
             path = "/index.html";
             templateEngine.process(path, ctx, response.getWriter());

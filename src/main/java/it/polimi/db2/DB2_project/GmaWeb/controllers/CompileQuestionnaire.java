@@ -2,6 +2,7 @@ package it.polimi.db2.DB2_project.GmaWeb.controllers;
 
 import it.polimi.db2.DB2_project.GmaEJB.Entities.*;
 import it.polimi.db2.DB2_project.GmaEJB.Services.AccessBean;
+import it.polimi.db2.DB2_project.GmaEJB.Services.BadwordBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.QuestionnaireBean;
 import it.polimi.db2.DB2_project.GmaEJB.Services.UserBean;
 import org.thymeleaf.TemplateEngine;
@@ -20,6 +21,8 @@ import java.util.Map;
 
 @WebServlet(name = "CompileQuestionnaire", value = "/CompileQuestionnaire")
 public class CompileQuestionnaire extends HttpServlet {
+    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/BadwordBean")
+    private BadwordBean badwordBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/AccessBean")
@@ -88,7 +91,7 @@ public class CompileQuestionnaire extends HttpServlet {
             answ.put(q.getQuestion_id(), request.getParameter("res" + q.getQuestion_id()));
         }
 
-        if(accessBean.hasBadword(answ)) {
+        if(badwordBean.checkForBadwords(answ)) {
             response.sendRedirect(homepath);
             userBean.banUser(u);
             return;
