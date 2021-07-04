@@ -34,9 +34,6 @@ public class User {
     @Column(name = "points", nullable = false)
     private Integer points;
 
-    @OneToMany(mappedBy = "user")
-    private List<Access> access;
-
     @Column(name = "isBanned", nullable = false)
     private Boolean isBanned;
 

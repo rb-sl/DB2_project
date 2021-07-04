@@ -16,10 +16,8 @@ public class Product {
     @Column(name = "prod_id", nullable = false)
     private Integer prod_id;
 
-    @OneToMany(mappedBy = "product")
-    private List<Questionnaire> questionnaires;
-
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "image", nullable = false)
     private byte[] image;
 

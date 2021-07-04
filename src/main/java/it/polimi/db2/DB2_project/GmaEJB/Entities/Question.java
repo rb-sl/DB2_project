@@ -19,13 +19,6 @@ public class Question {
     @Column(name = "text", nullable = false, length = 65536)
     private String text;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable (name = "answer",
-            joinColumns = @JoinColumn (name = "question_fk"))
-    @MapKeyJoinColumn (name = "access_fk")
-    @Column(name = "text")
-    private Map<Access, String> answers = new HashMap<>();
-
     public String getText() {
         return text;
     }

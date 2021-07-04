@@ -16,13 +16,10 @@ public class AccessBean {
     private EntityManager em;
     @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/QuestionnaireBean")
     private QuestionnaireBean questionnaireBean;
-    @EJB(name = "it.polimi.db2.DB2_project.GmaEJB.Services/BadwordBean")
-    private BadwordBean badwordbean;
-    private Access access;
 
     public void createAccess(User u, Sex sex, Short age, Expertise ex, Map<Integer, String> answ){
         Questionnaire questionnaire = questionnaireBean.findQuestionnaireByDate(LocalDate.now());
-        access = new Access();
+        Access access = new Access();
         access.setAccessTime(LocalTime.now());
         access.setAccessDate(LocalDate.now());
         access.setAge(age);
