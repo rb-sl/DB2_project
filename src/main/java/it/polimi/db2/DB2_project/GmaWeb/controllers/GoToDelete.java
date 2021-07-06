@@ -54,7 +54,7 @@ public class GoToDelete extends HttpServlet {
             return;
         }
 
-        List<Questionnaire> questionnaireList = questionnaireBean.findUntil(LocalDate.now());
+        List<Questionnaire> questionnaireList = questionnaireBean.findUntil(LocalDate.now().minusDays(1));
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
